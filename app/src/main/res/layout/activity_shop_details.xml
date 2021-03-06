@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".activity.ShopDetailsActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/img_product"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_product"
+                android:scaleType="fitXY" />
+
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="19dp"
+                android:fontFamily="@font/noto_semi_bold"
+                android:text="Puma Men's Metcon Sport\n
+Training Shoes..."
+                android:textColor="@color/text_color"
+                app:layout_constraintTop_toBottomOf="@id/img_product"
+                android:textSize="@dimen/text_size_20sp"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="19dp"
+                android:layout_marginTop="34dp"
+                android:fontFamily="@font/noto_semi_bold"
+                android:text="$60"
+                android:textColor="@color/app_color"
+                app:layout_constraintTop_toBottomOf="@id/img_product"
+                android:textSize="@dimen/text_size_24sp"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_product_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginStart="19dp"
+                android:layout_marginEnd="19dp"
+                android:fontFamily="@font/noto_regular"
+                android:text="Rubber / Synthetic Puma Men's Flex Generation\n V1 Idp Sneaker
+PUMA mens Wave MU IDP Puma\n Black-Silver-Golden Rod Sneaker-9UK PUMA\n mens Wave MU IDP PumabBlack-Silver-Golden\n Rod Sneaker-9UK."
+                app:layout_constraintTop_toBottomOf="@id/tv_title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvApplyForHelp"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="33dp"
+                android:layout_marginEnd="20dp"
+                app:cardBackgroundColor="@color/app_color"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="@dimen/_10sdp"
+                app:layout_constraintTop_toBottomOf="@id/tv_product_desc">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/noto_semi_bold"
+                        android:gravity="center"
+                        android:text="@string/my_helpers"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_20sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvEdit"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="20dp"
+                android:paddingBottom="@dimen/_60sdp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                app:cardBackgroundColor="@color/app_color"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="@dimen/_10sdp"
+                app:layout_constraintTop_toBottomOf="@id/cvApplyForHelp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/noto_semi_bold"
+                        android:gravity="center"
+                        android:text="@string/edit_content"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_20sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

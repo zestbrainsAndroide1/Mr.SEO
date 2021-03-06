@@ -1,0 +1,76 @@
+<resources>
+    <string name="app_name">Mr. Seo</string>
+    <string name="login">Log In</string>
+    <string name="title">Mr. SEO</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_pwd">Forgot Password ?</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="forgot">Forgot</string>
+    <string name="forget_pwd_desc">Enter your registered email below to receive password reset instruction</string>
+    <string name="send">Send</string>
+    <string name="back_to_login">Back to Login</string>
+    <string name="otp_verification">OTP Verification</string>
+    <string name="otp_desc">Enter ther OTP sent to</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="name">Name</string>
+    <string name="nick_name">Nick Name</string>
+    <string name="phone">Phone</string>
+    <string name="bank_name">Bank Name</string>
+    <string name="acc_no">Account Number</string>
+    <string name="bank_img">Bank Registration Image</string>
+    <string name="info">Info</string>
+    <string name="apply_for_help">Apply For Help</string>
+    <string name="edit_profile">Edit Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_name">User Name</string>
+    <string name="bank_account">Bank Account</string>
+    <string name="add">Add</string>
+    <string name="description">Description</string>
+    <string name="phone_no">Phone Number</string>
+    <string name="support">Support</string>
+    <string name="my_helpers">My Helpers</string>
+    <string name="add_content_details">Add Content Details</string>
+    <string name="platform">Platform</string>
+    <string name="title1">Title</string>
+    <string name="shopping">Shopping Mall Name</string>
+    <string name="price">Price</string>
+    <string name="point">Register Point</string>
+    <string name="edit">Edit</string>
+    <string name="user">User</string>
+    <string name="admin">Admin</string>
+    <string name="buy_points">Buy Points</string>
+    <string name="option">Option For Chat</string>
+    <string name="exit_desc">Are you sure you want to exit?</string>
+    <string name="search">Search</string>
+
+    <string name="message">Message</string>
+    <string name="add_content">Add Content</string>
+    <string name="welcome">Welcome</string>
+    <string name="user_password">User Password</string>
+    <string name="push_notification">Push notification</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="coins">Coins</string>
+    <string name="buy">.Buy</string>
+    <string name="my_contents">My Contents &amp; Help</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="my_content">My Contents</string>
+    <string name="helps">Helps</string>
+    <string name="edit_content">Edit Content</string>
+    <string name="title_activity_edit_content">EditContentActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="welcome1">Welcome to Mr. SEO</string>
+    <string name="desc">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour.  Randomised words which don\'t look even slightly believable.  To use a passage of Lorem Ipsum, you  need to be sure there isn\'t anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat.</string>
+    <string name="policy">Using our services</string>
+    <string name="ok">Ok</string>
+
+</resources>
