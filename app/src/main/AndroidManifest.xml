@@ -2,7 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zb.mrseo">
 
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -14,13 +21,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MrSeo"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activity.ViewImageActivity"></activity>
+        <activity android:name=".activity.NoticeActivity" />
+        <activity android:name=".activity.EditShopActivity" />
+        <activity android:name=".activity.EditShopBuyActivity" />
+        <activity android:name=".activity.EditBlogActivity" />
+        <activity android:name=".activity.EditCafeActivity" />
+        <activity android:name=".activity.ChatHistoryActivity" />
+        <activity android:name=".activity.HelpDetailActivity" />
+        <activity android:name=".activity.HelpActivity" />
+        <activity android:name=".activity.PostDetailActivity" />
+        <activity android:name=".activity.ChangePwdActivity" />
+        <activity android:name=".activity.TransactionActivity" />
         <activity
             android:name=".activity.EditContentActivity"
-            android:label="@string/title_activity_edit_content">
-
-        </activity>
-
-
+            android:label="@string/title_activity_edit_content" />
         <activity android:name=".activity.ChatActivity" />
         <activity android:name=".activity.ShopDetailsActivity" />
         <activity android:name=".SupportActivity" />
@@ -28,12 +43,16 @@
         <activity android:name=".activity.ProductActivity" />
         <activity
             android:name=".activity.SignUpActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.OtpActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ForgotPwdActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".permission.PermissionCheckerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LoginActivity"
@@ -49,7 +68,31 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher" />
+
+        <service
+            android:name=".services.MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.FcmTokenRegistrationService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

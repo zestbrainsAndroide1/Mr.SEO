@@ -8,19 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.zb.moodlist.utility.setSafeOnClickListener
-import com.zb.moodlist.utility.start
+import com.zb.moodlist.utility.*
 import com.zb.mrseo.R
 import com.zb.mrseo.activity.ForgotPwdActivity
 import com.zb.mrseo.activity.TransactionActivity
 import com.zb.mrseo.adapter.HomeAdapter
+import com.zb.mrseo.model.AddContentModel
+import com.zb.mrseo.model.HomeModel
+import com.zb.mrseo.model.LoginModel
+import com.zb.mrseo.model.PlatformListModel
+import com.zb.mrseo.restapi.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_content.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(),ApiResponseInterface {
     lateinit var homeAdapter: HomeAdapter
+    var mUserModel: LoginModel.Data? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +41,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUi() {
+        mUserModel = Prefs.getObject(
+            activity!!,
+            AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
+        ) as LoginModel.Data
+
+        tv_coin_count1.text=mUserModel!!.coin.toString()
         homeAdapter = HomeAdapter(activity!!)
         val linearLayoutManager1 =
             LinearLayoutManager(
@@ -60,6 +71,59 @@ class HomeFragment : Fragment() {
             activity!!.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
 
         }
+        getHomeData()
     }
+
+    private fun getHomeData() {
+        if (isNetworkAvailable(activity!!)) {
+
+            ApiRequest<Any>(
+                activity = activity!!,
+                objectType = ApiInitialize.initialize()
+                    .getHomeData(
+                        "Bearer ".plus(mUserModel!!.token.toString())
+                    ),
+                TYPE = WebConstant.GET_HOME_DATA,
+                isShowProgressDialog = true,
+                apiResponseInterface = this@HomeFragment
+            )
+
+        } else {
+            SnackBar.show(
+                activity,
+                true,
+                getStr(activity!!, R.string.str_network_error),
+                false,
+                "OK",
+                null
+            )
+        }
+    }
+
+    override fun getApiResponse(apiResponseManager: ApiResponseManager<*>) {
+        when (apiResponseManager.type) {
+
+            WebConstant.GET_HOME_DATA -> {
+                val response = apiResponseManager.response as HomeModel
+
+                when (response.status) {
+                    200 -> {
+
+                        homeAdapter.clear()
+                        if (response.data!!.size > 0) {
+                            homeAdapter.addAll(response.data!!)
+                        } else {
+
+                        }
+
+                    }
+                    else -> ShowToast(response.message!!, activity!!)
+                }
+            }
+
+
+        }
+    }
+
 
 }

@@ -6,6 +6,8 @@
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="text_size_35sp">35sp</dimen>
 
+    <dimen name="margin_57dp">57dp</dimen>
+    <dimen name="margin_20dp">20dp</dimen>
 
     <dimen name="spacing_medium">4dp</dimen>
     <dimen name="spacing_xxlarge">40dp</dimen>
@@ -29,5 +31,20 @@
     inner_frame_layout_padding (below variable) on round screens.
     -->
     <dimen name="inner_frame_layout_padding">5dp</dimen>
+    <dimen name="text_size_17sp">17sp</dimen>
+    <dimen name="margin_15dp">15dp</dimen>
+    <dimen name="margin_18dp">18dp</dimen>
+    <dimen name="margin_24dp">24dp</dimen>
+    <dimen name="margin_30dp">30dp</dimen>
+    <dimen name="margin_36dp">36dp</dimen>
+    <dimen name="margin_4dp">4dp</dimen>
+    <dimen name="margin_16dp">16dp</dimen>
+    <dimen name="margin_21dp">21dp</dimen>
+    <dimen name="margin_46dp">46dp</dimen>
+    <dimen name="margin_26dp">26dp</dimen>
+    <dimen name="margin_6dp">6dp</dimen>
+    <dimen name="margin_29dp">29dp</dimen>
+    <dimen name="margin_27dp">27dp</dimen>
+    <dimen name="margin_14dp">14dp</dimen>
 
 </resources>

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.HelpActivity">
+
+    <ImageView
+        android:id="@+id/img_back_post_detail"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_post_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/noto_medium"
+        android:text="Help Online Shop (Buy)"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_edit_content"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="19dp"
+        android:fontFamily="@font/noto_medium"
+        android:src="@drawable/edit"
+        android:text="@string/my_helpers"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_back_post_detail">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/tv_open_market_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:layout_marginTop="@dimen/margin_57dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/noto_regular"
+                android:text="@string/open_market"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/tv_name_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_57dp"
+                android:layout_marginEnd="@dimen/margin_20dp"
+                android:fontFamily="@font/noto_regular"
+                android:text="@string/name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/line_first_content"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="22dp"
+                android:layerType="software"
+                android:src="@drawable/dot_line"
+                app:layout_constraintTop_toBottomOf="@id/tv_open_market_content" />
+
+
+            <TextView
+                android:id="@+id/tv_keyword_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/noto_regular"
+                android:text="@string/keyword"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line_first_content" />
+
+
+            <TextView
+                android:id="@+id/tv_keyword_name_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:layout_marginEnd="@dimen/margin_20dp"
+                android:fontFamily="@font/noto_regular"
+                android:text="12548445"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line_first_content" />
+
+
+            <ImageView
+                android:id="@+id/line_second_keyword"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:layout_marginEnd="22dp"
+                android:layerType="software"
+                android:src="@drawable/dot_line"
+                app:layout_constraintTop_toBottomOf="@id/tv_keyword_content" />
+
+
+            <TextView
+                android:id="@+id/tv_shopping_mall_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:alpha="0.7"
+                android:fontFamily="@font/noto_regular"
+                android:text="@string/shopping_mall_name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line_second_keyword" />
+
+
+            <TextView
+                android:id="@+id/tv_shopping_mall_name_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:layout_marginEnd="@dimen/margin_20dp"
+                android:fontFamily="@font/noto_regular"
+                android:text="Amazon"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line_second_keyword" />
+
+
+            <ImageView
+                android:id="@+id/line_third"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:layout_marginEnd="22dp"
+                android:layerType="software"
+                android:src="@drawable/dot_line"
+                app:layout_constraintTop_toBottomOf="@id/tv_shopping_mall_content" />
+
+
+            <TextView
+                android:id="@+id/tv_desc_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:alpha="0.7"
+
+                android:fontFamily="@font/noto_regular"
+                android:text="@string/description"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line_third" />
+
+
+            <TextView
+                android:id="@+id/tv_description_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:layout_marginEnd="@dimen/margin_20dp"
+                android:fontFamily="@font/noto_regular"
+                android:text="It is a long established\n fact that a reader"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line_third" />
+
+
+            <ImageView
+                android:id="@+id/line_fourth"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="@dimen/margin_36dp"
+                android:layout_marginEnd="22dp"
+                android:layerType="software"
+                android:src="@drawable/dot_line"
+                app:layout_constraintTop_toBottomOf="@id/tv_desc_content" />
+
+
+            <TextView
+                android:id="@+id/tv_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:alpha="0.7"
+
+                android:fontFamily="@font/noto_regular"
+                android:text="@string/remaining_points"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line_fourth" />
+
+            <TextView
+                android:id="@+id/tv_remaining_points_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:layout_marginEnd="@dimen/margin_4dp"
+                android:fontFamily="@font/noto_regular"
+                android:text="20/"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintEnd_toStartOf="@id/tv_total_points_content"
+                app:layout_constraintTop_toBottomOf="@id/line_fourth" />
+
+            <TextView
+                android:id="@+id/tv_total_points_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:layout_marginEnd="@dimen/margin_20dp"
+                android:fontFamily="@font/noto_regular"
+                android:text="20"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line_fourth" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_helper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                app:layout_constraintTop_toBottomOf="@id/tv_remaining_points_content"
+                tools:listitem="@layout/row_post" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

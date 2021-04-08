@@ -31,11 +31,8 @@ inline fun <E : Any, T : Collection<E>> T?.whenNotNullNorEmpty(func: (T) -> Unit
     }
 }
 
-inline fun <T> T?.notNull(f: (T) -> Unit) {
-    if (this != null) {
-        f(this)
-    }
-}
+
+
 
 
 /*------------------------------------------------------------------------------------------------*/

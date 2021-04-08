@@ -29,6 +29,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tl_email"
                 style="@style/LoginTextInputLayoutStyle"
@@ -55,7 +58,7 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtMobile"
+                    android:id="@+id/edt_email"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/noto_regular"
@@ -92,7 +95,7 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtPassword"
+                    android:id="@+id/edt_password"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/noto_regular"
@@ -216,43 +219,88 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tl_phone"
-                style="@style/LoginTextInputLayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="20dp"
-                android:alpha="0.5"
-                android:hint="@string/phone"
-                android:outlineAmbientShadowColor="#D8D8D8"
-                android:outlineSpotShadowColor="#D8D8D8"
-                android:textColorHint="@color/text_color_hint"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="5dp"
-                app:boxCornerRadiusBottomStart="5dp"
-                app:boxCornerRadiusTopEnd="5dp"
-                app:boxCornerRadiusTopStart="5dp"
-                app:boxStrokeColor="#D8D8D8"
-                app:boxStrokeWidth="1dp"
-                app:hintTextColor="@color/text_color_hint"
+
+
+            <RelativeLayout
+                android:id="@+id/rl_edit_profile"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tl_nick_name">
+                app:layout_constraintTop_toBottomOf="@id/tl_nick_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtPhone"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tl_phone"
+                    style="@style/LoginTextInputLayoutStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/noto_regular"
-                    android:inputType="number"
-                    android:maxLength="10"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:layout_height="54dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:alpha="0.5"
+                    android:hint="@string/phone"
+                    android:outlineAmbientShadowColor="#D8D8D8"
+                    android:outlineSpotShadowColor="#D8D8D8"
+                    android:textColorHint="@color/text_color_hint"
+                    app:boxBackgroundColor="@color/white"
+                    app:boxCornerRadiusBottomEnd="5dp"
+                    app:boxCornerRadiusBottomStart="5dp"
+                    app:boxCornerRadiusTopEnd="5dp"
+                    app:boxCornerRadiusTopStart="5dp"
+                    app:boxStrokeColor="#D8D8D8"
+                    app:boxStrokeWidth="1dp"
+                    app:hintTextColor="@color/text_color_hint"
+                    app:layout_constraintStart_toStartOf="parent"
+                   >
 
-            </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/noto_regular"
+                        android:singleLine="true"
+                        android:inputType="number"
+android:maxLength="10"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_alignParentRight="true">
+
+
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/ccp_login_country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        app:ccpDialog_keyboardAutoPopup="false"
+                        app:ccpDialog_searchEditTextTint="@color/colorPrimaryDark"
+                        app:ccpDialog_textColor="@color/black"
+                        app:ccp_autoDetectCountry="true"
+                        app:ccp_autoDetectLanguage="true"
+                        app:ccp_autoFormatNumber="true"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        app:ccp_contentColor="@color/black"
+                        app:ccp_flagBorderColor="@color/white"
+                        app:ccp_showArrow="false"
+                        app:ccp_showFlag="true"
+                        app:ccpDialog_background="@color/white"
+                        app:ccp_showNameCode="false"
+                        app:ccp_showPhoneCode="false"
+                        />
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -280,7 +328,7 @@
                 app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/text_color_hint"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tl_phone">
+                app:layout_constraintTop_toBottomOf="@id/rl_edit_profile">
 
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -339,78 +387,63 @@
 
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tl_bank_img"
-                style="@style/LoginTextInputLayoutStyle"
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_bank_img_sign_up"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:layout_marginStart="20dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="26dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginEnd="20dp"
-                android:alpha="0.5"
-                android:hint="@string/bank_img"
-                android:outlineAmbientShadowColor="#D8D8D8"
-                android:outlineSpotShadowColor="#D8D8D8"
-                android:textColorHint="@color/text_color_hint"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="5dp"
-                app:boxCornerRadiusBottomStart="5dp"
-                app:boxCornerRadiusTopEnd="5dp"
-                app:boxCornerRadiusTopStart="5dp"
-                app:boxStrokeColor="#D8D8D8"
-                app:boxStrokeWidth="1dp"
-                app:hintTextColor="@color/text_color_hint"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginEnd="26dp"
                 app:layout_constraintTop_toBottomOf="@id/tl_acc_no">
 
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtBankImg"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/noto_regular"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_regular"
+                        android:text="@string/bank_img"
+                        android:textAllCaps="true"
+                        android:textColor="#9A9090"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/img_bank_sign_up"
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:background="@drawable/border"
+                            android:scaleType="fitXY"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:layout_centerInParent="true"
+                            android:tint="@color/app_color"
+                            android:src="@drawable/ic_camera"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tl_info"
-                style="@style/LoginTextInputLayoutStyle"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="20dp"
-                android:alpha="0.5"
-                android:hint="@string/info"
-                android:outlineAmbientShadowColor="#D8D8D8"
-                android:outlineSpotShadowColor="#D8D8D8"
-                android:textColorHint="@color/text_color_hint"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="5dp"
-                app:boxCornerRadiusBottomStart="5dp"
-                app:boxCornerRadiusTopEnd="5dp"
-                app:boxCornerRadiusTopStart="5dp"
-                app:boxStrokeColor="#D8D8D8"
-                app:boxStrokeWidth="1dp"
-                app:hintTextColor="@color/text_color_hint"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tl_bank_img">
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/noto_regular"
-                    android:singleLine="true"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:id="@+id/llAccept"
@@ -418,7 +451,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginStart="20dp"
-                app:layout_constraintTop_toBottomOf="@id/tl_info">
+                app:layout_constraintTop_toBottomOf="@id/cl_bank_img_sign_up">
                 <CheckBox
                     android:id="@+id/chk_accept"
                     android:layout_width="@dimen/_30sdp"

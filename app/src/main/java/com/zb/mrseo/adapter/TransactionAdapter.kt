@@ -1,32 +1,40 @@
 package com.zb.mrseo.adapter
 
 
-
-
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.annotation.ColorRes
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zb.mrseo.R
 import com.zb.mrseo.activity.ChatActivity
 import com.zb.mrseo.activity.ProductActivity
+import com.zb.mrseo.model.HomeModel
+import com.zb.mrseo.model.TransactionModel
 
 
-class TransactionAdapter(private val mActivity: Context
+class TransactionAdapter(
+    private val mActivity: Context
 ) :
     RecyclerView.Adapter<TransactionAdapter.MyViewHolder>() {
 
+    private var mModel = ArrayList<TransactionModel.Datum>()
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        var tvCoins: TextView = itemView.findViewById(R.id.tv_total_coins)
+        var tvDate: TextView = itemView.findViewById(R.id.tv_date)
+        var tvStatus: TextView = itemView.findViewById(R.id.tv_status)
 
     }
 
@@ -41,23 +49,37 @@ class TransactionAdapter(private val mActivity: Context
         holder: MyViewHolder,
         @SuppressLint("RecyclerView") listPosition: Int
     ) {
+        holder.tvCoins.text = mModel[listPosition].amount.toString() + " coins"
+        holder.tvDate.text = mModel[listPosition].createdAt.toString()
 
+
+        holder.tvStatus.text = mModel[listPosition].type.toString()
+
+        if (mModel[listPosition].type.toString().equals("Used")) {
+            holder.tvStatus.setTextColor(Color.parseColor("#FF0000"))
+
+        } else {
+            holder.tvStatus.setTextColor(Color.parseColor("#69B95C"))
+
+
+        }
 
 
     }
+
 
     override fun getItemCount(): Int {
-        return 6
+        return mModel.size
     }
 
-    /* fun addAll(mData: ArrayList<MemberModel.Datum>?) {
-         filteredData.addAll(mData!!)
-         notifyItemInserted(filteredData.size - 1)
-         notifyDataSetChanged()
-     }
+    fun addAll(mData: ArrayList<TransactionModel.Datum>?) {
+        mModel.addAll(mData!!)
+        notifyItemInserted(mModel.size - 1)
+        notifyDataSetChanged()
+    }
 
-     fun clear() {
-         filteredData.clear()
-         notifyDataSetChanged()
-     }*/
+    fun clear() {
+        mModel.clear()
+        notifyDataSetChanged()
+    }
 }

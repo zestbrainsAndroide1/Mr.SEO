@@ -12,21 +12,40 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.zb.moodlist.utility.AppConstant
+import com.zb.moodlist.utility.Prefs
+import com.zb.moodlist.utility.gone
 import com.zb.mrseo.R
 import com.zb.mrseo.activity.ChatActivity
 import com.zb.mrseo.activity.ProductActivity
+import com.zb.mrseo.model.ChatListModel
+import com.zb.mrseo.model.ChatModel
+import com.zb.mrseo.model.LoginModel
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MessageAdapter(private val mActivity: Context
 ) :
     RecyclerView.Adapter<MessageAdapter.MyViewHolder>() {
 
+    private var mModel = ArrayList<ChatModel.Datum>()
+    var mUserModel: LoginModel.Data? = null
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var llReceiver: LinearLayout = itemView.findViewById(R.id.ll_receiver)
+        var llSender: LinearLayout = itemView.findViewById(R.id.ll_sender)
+        var tvSenderMsg: TextView = itemView.findViewById(R.id.tv_sender_msg)
+        var tvSenderMsgTime: TextView = itemView.findViewById(R.id.tv_sender_msg_time)
+        var tvReceiverMsg: TextView = itemView.findViewById(R.id.tv_receiver_msg)
+        var tvReceiverMsgTime: TextView = itemView.findViewById(R.id.tv_receiver_time)
 
 
     }
@@ -42,23 +61,61 @@ class MessageAdapter(private val mActivity: Context
         holder: MyViewHolder,
         @SuppressLint("RecyclerView") listPosition: Int
     ) {
+        mUserModel = Prefs.getObject(
+            mActivity,
+            AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
+        ) as LoginModel.Data
+
+        if(mModel[listPosition].senderId.toString().equals(mUserModel!!.id.toString())){
+            holder.llReceiver.gone()
+            holder.tvSenderMsg.text=mModel[listPosition].message.toString()
+            holder.tvSenderMsgTime.text=getUTCTOLOCALFromServer(mModel[listPosition].createdAt.toString())
+
+        }else{
+            holder.llSender.gone()
+            holder.tvReceiverMsg.text=mModel[listPosition].message.toString()
+            holder.tvReceiverMsgTime.text=getUTCTOLOCALFromServer(mModel[listPosition].createdAt.toString())
+
+        }
 
 
 
+    }
+
+
+    open fun getUTCTOLOCALFromServer(originalString: String?): String? {
+        var newstr = ""
+        try {
+            val sDF = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH)
+            sDF.timeZone = TimeZone.getTimeZone("UTC")
+            val date = sDF.parse(originalString)
+            newstr = SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date)
+            println(
+                """
+                
+                $newstr
+                
+                """.trimIndent()
+            )
+        } catch (e: ParseException) {
+            //Handle exception here
+            e.printStackTrace()
+        }
+        return newstr
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return mModel.size
     }
 
-    /* fun addAll(mData: ArrayList<MemberModel.Datum>?) {
-         filteredData.addAll(mData!!)
-         notifyItemInserted(filteredData.size - 1)
-         notifyDataSetChanged()
-     }
+    fun addAll(mData: ArrayList<ChatModel.Datum>?) {
+        mModel.addAll(mData!!)
+        notifyItemInserted(mModel.size - 1)
+        notifyDataSetChanged()
+    }
 
-     fun clear() {
-         filteredData.clear()
-         notifyDataSetChanged()
-     }*/
+    fun clear() {
+        mModel.clear()
+        notifyDataSetChanged()
+    }
 }

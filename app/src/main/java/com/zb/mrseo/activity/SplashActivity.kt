@@ -4,6 +4,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.text.TextUtils
+import com.zb.moodlist.utility.AppConstant
+import com.zb.moodlist.utility.Prefs
+import com.zb.moodlist.utility.start
+import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
 
 class SplashActivity : AppCompatActivity() {
@@ -14,12 +19,17 @@ class SplashActivity : AppCompatActivity() {
 
 
 
+            if (Prefs.contain(this@SplashActivity, AppConstant.ACCOUNT_DATA)) {
+                start<MainActivity>()
+                finishAffinity()
 
 
-            val intent = Intent(this@SplashActivity, LoginActivity::class.java)
-            startActivity(intent)
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-            finish()
+            }else{
+                start<LoginActivity>()
+                finishAffinity()
+            }
+
+
 
 
 

@@ -83,6 +83,7 @@
             android:layout_height="253dp"
             android:orientation="horizontal">
             <LinearLayout
+                android:id="@+id/llOnlineShop"
                 android:layout_width="@dimen/margin_10dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
@@ -94,6 +95,7 @@
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
+                    android:visibility="gone"
                     android:src="@drawable/ic_basket"/>
                 <TextView
                     android:id="@+id/tv_forgot"
@@ -125,6 +127,7 @@ Shop (Buy)"
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
+                    android:visibility="gone"
                     android:src="@drawable/ic_cart"/>
                 <TextView
                     android:id="@+id/tv_cart"
@@ -149,6 +152,7 @@ Shop (Browse)"
             android:layout_marginTop="24dp"
             android:orientation="horizontal">
             <LinearLayout
+                android:id="@+id/ll_add_blog"
                 android:layout_width="@dimen/margin_10dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
@@ -160,6 +164,7 @@ Shop (Browse)"
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
+                    android:visibility="gone"
                     android:src="@drawable/ic_notes"/>
                 <TextView
                     android:id="@+id/tv_blog"
@@ -179,6 +184,7 @@ Blog"
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/ll_add_cafe"
                 android:layout_width="@dimen/margin_10dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="19dp"
@@ -190,6 +196,7 @@ Blog"
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
+                    android:visibility="gone"
                     android:src="@drawable/ic_cafe"/>
                 <TextView
                     android:id="@+id/tv_cafe"

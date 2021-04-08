@@ -7,26 +7,37 @@
     android:layout_height="match_parent"
     tools:context=".activity.ProductActivity">
 
-    <ImageView
-        android:id="@+id/img_product"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/ll_product"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/img_product"
-        android:scaleType="fitXY" />
+        android:layout_width="match_parent"
+        android:background="@drawable/img_bg"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_product"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/app_color"
+            android:layout_height="@dimen/_270sdp"
+            android:scaleType="fitXY" />
+
+    </LinearLayout>
+
 
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_product_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_marginStart="19dp"
         android:layout_marginTop="19dp"
         android:fontFamily="@font/noto_semi_bold"
         android:text="Puma Men's Metcon Sport\n
 Training Shoes..."
         android:textColor="@color/text_color"
-        app:layout_constraintTop_toBottomOf="@id/img_product"
+        app:layout_constraintTop_toBottomOf="@id/ll_product
+"
         android:textSize="@dimen/text_size_20sp"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -39,7 +50,7 @@ Training Shoes..."
         android:fontFamily="@font/noto_semi_bold"
         android:text="$60"
         android:textColor="@color/app_color"
-        app:layout_constraintTop_toBottomOf="@id/img_product"
+        app:layout_constraintTop_toBottomOf="@id/ll_product"
         android:textSize="@dimen/text_size_24sp"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -53,7 +64,7 @@ Training Shoes..."
         android:fontFamily="@font/noto_regular"
         android:text="Rubber / Synthetic Puma Men's Flex Generation\n V1 Idp Sneaker
 PUMA mens Wave MU IDP Puma\n Black-Silver-Golden Rod Sneaker-9UK PUMA\n mens Wave MU IDP PumabBlack-Silver-Golden\n Rod Sneaker-9UK."
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_product_title"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_14sp"
         app:layout_constraintStart_toStartOf="parent" />

@@ -19,13 +19,13 @@
                 android:id="@+id/img_product"
                 android:layout_width="match_parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_270sdp"
                 android:src="@drawable/img_product"
                 android:scaleType="fitXY" />
 
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tv_title_shop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="19dp"
@@ -61,7 +61,7 @@ Training Shoes..."
                 android:fontFamily="@font/noto_regular"
                 android:text="Rubber / Synthetic Puma Men's Flex Generation\n V1 Idp Sneaker
 PUMA mens Wave MU IDP Puma\n Black-Silver-Golden Rod Sneaker-9UK PUMA\n mens Wave MU IDP PumabBlack-Silver-Golden\n Rod Sneaker-9UK."
-                app:layout_constraintTop_toBottomOf="@id/tv_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_title_shop"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_14sp"
                 app:layout_constraintStart_toStartOf="parent" />

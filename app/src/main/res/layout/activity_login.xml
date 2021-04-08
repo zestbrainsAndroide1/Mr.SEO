@@ -63,7 +63,7 @@
 
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtMobile"
+            android:id="@+id/edtEmailId"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/noto_regular"

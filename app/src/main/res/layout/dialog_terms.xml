@@ -39,7 +39,8 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_16sp" />
 
-        <TextView
+        <org.sufficientlysecure.htmltextview.HtmlTextView
+            android:id="@+id/tv_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -52,7 +53,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_15sp" />
 
-        <TextView
+   <!--     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/noto_regular"
@@ -63,10 +64,10 @@
 
             android:text="Randomised words which don\'t look even slightly believable."
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_15sp" />
+            android:textSize="@dimen/text_size_15sp" />-->
 
 
-        <TextView
+      <!--  <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/noto_regular"
@@ -105,7 +106,7 @@
             android:alpha="0.5"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_15sp" />
-
+-->
         <androidx.cardview.widget.CardView
             android:id="@+id/cvOk"
             android:layout_width="198dp"

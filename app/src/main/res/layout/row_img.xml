@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:background="@color/white"
+android:paddingEnd="@dimen/_4sdp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:id="@+id/llAddImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+       >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center"
+
+            android:orientation="vertical">
+            <com.github.siyamed.shapeimageview.mask.PorterShapeImageView
+                android:id="@+id/img"
+                android:layout_width="104dp"
+                android:visibility="gone"
+                android:layout_height="104dp"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="18dp"
+                android:scaleType="fitXY"
+                app:siShape="@drawable/round" />
+
+
+            <ImageView
+                android:id="@+id/img_upload"
+                android:layout_width="95dp"
+                android:layout_height="95dp"
+                android:scaleType="fitXY"
+                android:layout_centerInParent="true"
+                android:src="@drawable/upload" />
+
+
+
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

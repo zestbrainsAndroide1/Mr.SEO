@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.EditBlogActivity">
+
+    <ImageView
+        android:id="@+id/img_back"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/noto_medium"
+        android:text="@string/edit_content_details"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_blog_name"
+        style="@style/LoginTextInputLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:alpha="0.5"
+        android:hint="@string/blog_name"
+        android:outlineAmbientShadowColor="#D8D8D8"
+        android:outlineSpotShadowColor="#D8D8D8"
+        android:textColorHint="@color/text_color_hint"
+        app:boxBackgroundColor="@color/white"
+        app:boxCornerRadiusBottomEnd="5dp"
+        app:boxCornerRadiusBottomStart="5dp"
+        app:boxCornerRadiusTopEnd="5dp"
+        app:boxCornerRadiusTopStart="5dp"
+        app:boxStrokeColor="#D8D8D8"
+        app:boxStrokeWidth="1dp"
+        app:hintTextColor="@color/text_color_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_login">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtBlogName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/noto_regular"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_keyword"
+        style="@style/LoginTextInputLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="20dp"
+        android:alpha="0.5"
+        android:hint="@string/keyword"
+        android:outlineAmbientShadowColor="#D8D8D8"
+        android:outlineSpotShadowColor="#D8D8D8"
+        android:textColorHint="@color/text_color_hint"
+        app:boxBackgroundColor="@color/white"
+        app:boxCornerRadiusBottomEnd="5dp"
+        app:boxCornerRadiusBottomStart="5dp"
+        app:boxCornerRadiusTopEnd="5dp"
+        app:boxCornerRadiusTopStart="5dp"
+        app:boxStrokeColor="#D8D8D8"
+        app:boxStrokeWidth="1dp"
+        app:hintTextColor="@color/text_color_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tl_blog_name">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtKeyword"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/noto_regular"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_decs"
+        style="@style/LoginTextInputLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="20dp"
+        android:alpha="0.5"
+        android:hint="@string/description"
+        android:outlineAmbientShadowColor="#D8D8D8"
+        android:outlineSpotShadowColor="#D8D8D8"
+        android:textColorHint="@color/text_color_hint"
+        app:boxBackgroundColor="@color/white"
+        app:boxCornerRadiusBottomEnd="5dp"
+        app:boxCornerRadiusBottomStart="5dp"
+        app:boxCornerRadiusTopEnd="5dp"
+        app:boxCornerRadiusTopStart="5dp"
+        app:boxStrokeColor="#D8D8D8"
+        app:boxStrokeWidth="1dp"
+        app:hintTextColor="@color/text_color_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tl_keyword">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtDesc1"
+            android:layout_width="match_parent"
+            android:gravity="start"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/noto_regular"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tl_point"
+        style="@style/LoginTextInputLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="66dp"
+        android:alpha="0.5"
+        android:hint="@string/point"
+        android:outlineAmbientShadowColor="#D8D8D8"
+        android:outlineSpotShadowColor="#D8D8D8"
+        android:textColorHint="@color/text_color_hint"
+        app:boxBackgroundColor="@color/white"
+        app:boxCornerRadiusBottomStart="5dp"
+        app:boxCornerRadiusTopStart="5dp"
+        app:boxStrokeColor="#D8D8D8"
+        app:boxStrokeWidth="1dp"
+        app:hintTextColor="@color/text_color_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tl_decs">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtPoint1"
+            android:layout_width="match_parent"
+            android:gravity="start"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/noto_regular"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/tv_total_points_blog1"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14ssp"
+        android:fontFamily="@font/noto_medium"
+        android:text="@string/points"
+        app:layout_constraintTop_toBottomOf="@id/tl_decs"
+        app:layout_constraintStart_toEndOf="@id/tl_point"
+        android:background="@drawable/point_bg"
+        android:layout_marginTop="@dimen/margin_29dp"/>
+
+    <TextView
+        android:id="@+id/tv_note_blog1"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:textColor="@color/app_color"
+        android:visibility="gone"
+        android:textSize="@dimen/_10ssp"
+        android:fontFamily="@font/noto_regular"
+        android:text="@string/notes"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="22dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tl_point"
+        android:layout_marginTop="@dimen/margin_10dp"/>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvAddBlog"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        app:cardBackgroundColor="@color/app_color"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/tv_note_blog1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/noto_semi_bold"
+                android:gravity="center"
+                android:text="@string/add"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_20sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
