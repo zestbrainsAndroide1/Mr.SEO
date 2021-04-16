@@ -420,6 +420,11 @@ interface ApiInterface {
         @Header("Authorization") Authorization: String): Call<NoticeModel>
 
 
+    @POST("V1/chat/admin_chat_option")
+    fun getStatus(
+        @Header("Authorization") Authorization: String): Call<BtnStatusModel>
+
+
 }
 
 

@@ -17,6 +17,7 @@ import com.zb.mrseo.activity.TransactionActivity
 import com.zb.mrseo.adapter.ContentListAdapter
 import com.zb.mrseo.adapter.HelperAdapter
 import com.zb.mrseo.adapter.HomeAdapter
+import com.zb.mrseo.interfaces.OnDeleteClick
 import com.zb.mrseo.interfaces.OnPlatformClick
 import com.zb.mrseo.model.*
 import com.zb.mrseo.restapi.*
@@ -27,7 +28,7 @@ import kotlinx.android.synthetic.main.fragment_option.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 
-class ContentFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
+class ContentFragment : Fragment(), ApiResponseInterface, OnPlatformClick ,OnDeleteClick{
 
     lateinit var contentListAdapter: ContentListAdapter
     var mUserModel: LoginModel.Data? = null
@@ -258,6 +259,10 @@ var show:String=""
                 null
             )
         }
+    }
+
+    override fun OnDeleteClick(pos: Int, id: String) {
+
     }
 
 

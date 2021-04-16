@@ -38,7 +38,6 @@ class TransactionActivity : AppCompatActivity(), ApiResponseInterface {
         ) as LoginModel.Data
 
         tv_user_name_transaction.text=mUserModel!!.name.toString()
-        tv_desc_transaction.text="I have "+mUserModel!!.coin.toString()+ "Coins for use"
         transactionAdapter = TransactionAdapter(this@TransactionActivity)
         val linearLayoutManager1 =
             LinearLayoutManager(
@@ -86,7 +85,6 @@ class TransactionActivity : AppCompatActivity(), ApiResponseInterface {
                 when (response.status) {
                     200 -> {
 
-                        tv_total_coins.text=response.coin.toString() +" Coins"
                         transactionAdapter.clear()
                         if (response.data!!.size > 0) {
                             transactionAdapter.addAll(response.data!!)

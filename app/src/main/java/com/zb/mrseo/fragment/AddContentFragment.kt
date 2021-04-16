@@ -6,11 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentTransaction
+import com.zb.moodlist.utility.AppConstant
+import com.zb.moodlist.utility.Prefs
 import com.zb.mrseo.R
+import com.zb.mrseo.model.LoginModel
 import kotlinx.android.synthetic.main.fragment_add_content.*
+import kotlinx.android.synthetic.main.fragment_content.*
 
 class AddContentFragment : Fragment() {
 
+    var mUserModel: LoginModel.Data? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +30,12 @@ class AddContentFragment : Fragment() {
         setUi()
     }
     private fun setUi(){
+        mUserModel = Prefs.getObject(
+            activity!!,
+            AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
+        ) as LoginModel.Data
+
+        tv_coin_count.text=mUserModel!!.coin.toString()
 
 
         ll_shop.setOnClickListener(View.OnClickListener {

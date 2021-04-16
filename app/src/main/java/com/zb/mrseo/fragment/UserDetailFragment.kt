@@ -52,7 +52,7 @@ class UserDetailFragment : Fragment(),ApiResponseInterface {
 
     }
     private fun setUi() {
-
+        tv_coin_desc.text="I have "+mUserModel?.coin.toString()+" Coins for use"
         getProfile()
 
         img_logout.setSafeOnClickListener {
@@ -79,7 +79,7 @@ class UserDetailFragment : Fragment(),ApiResponseInterface {
             activity!!.startActivity(intent)
             activity!!.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         })
-        tv_my_points.setOnClickListener(View.OnClickListener {
+        ll_points.setOnClickListener(View.OnClickListener {
 
             val intent = Intent(activity!!, TransactionActivity::class.java)
             activity!!.startActivity(intent)

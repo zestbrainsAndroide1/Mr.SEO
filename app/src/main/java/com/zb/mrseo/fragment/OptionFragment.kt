@@ -19,6 +19,7 @@ import com.zb.mrseo.activity.ChatActivity
 import com.zb.mrseo.activity.TransactionActivity
 import com.zb.mrseo.adapter.ChatListAdapter
 import com.zb.mrseo.adapter.HomeAdapter
+import com.zb.mrseo.model.BtnStatusModel
 import com.zb.mrseo.model.ChatListModel
 import com.zb.mrseo.model.HomeModel
 import com.zb.mrseo.model.LoginModel
@@ -33,7 +34,7 @@ class OptionFragment : Fragment(),ApiResponseInterface {
 
     lateinit var chatListAdapter: ChatListAdapter
     var mUserModel: LoginModel.Data? = null
-
+    var show:String=""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,6 +44,10 @@ class OptionFragment : Fragment(),ApiResponseInterface {
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val bundle = this.arguments
+        if (bundle != null) {
+            show = bundle.getString("show").toString()
+        }
       setUi()
     }
     private fun setUi(){
@@ -50,14 +55,23 @@ class OptionFragment : Fragment(),ApiResponseInterface {
             activity!!,
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
-
+        tv_coin_count_chat.text=mUserModel?.coin.toString()
         cv_coin_option.setSafeOnClickListener {
             activity!!.start<TransactionActivity>()
 
 
         }
+        if(show.equals("admin")){
+            getChatOption()
+            rl_user.visibility=View.GONE
+            rl_admin.visibility=View.VISIBLE
+            cl_admin.visibility=View.VISIBLE
+            cl_user.visibility=View.GONE
+        }
         cvAdmin.setSafeOnClickListener {
-           rl_user.visibility=View.GONE
+            getChatOption()
+
+            rl_user.visibility=View.GONE
             rl_admin.visibility=View.VISIBLE
             cl_admin.visibility=View.VISIBLE
             cl_user.visibility=View.GONE
@@ -163,7 +177,7 @@ class OptionFragment : Fragment(),ApiResponseInterface {
                     .getChatList(
                         "Bearer ".plus(mUserModel!!.token.toString()),
                         "",
-                        "1"
+                        ""
                     ),
                 TYPE = WebConstant.GET_CHAT_LIST,
                 isShowProgressDialog = true,
@@ -182,6 +196,34 @@ class OptionFragment : Fragment(),ApiResponseInterface {
         }
     }
 
+    private fun getChatOption() {
+        if (isNetworkAvailable(activity!!)) {
+
+            ApiRequest<Any>(
+                activity = activity!!,
+                objectType = ApiInitialize.initialize()
+                    .getStatus(
+                        "Bearer ".plus(mUserModel!!.token.toString()),
+
+                    ),
+                TYPE = WebConstant.GET_STATUS,
+                isShowProgressDialog = true,
+                apiResponseInterface = this@OptionFragment
+            )
+
+        } else {
+            SnackBar.show(
+                activity,
+                true,
+                getStr(activity!!, R.string.str_network_error),
+                false,
+                "OK",
+                null
+            )
+        }
+    }
+
+
     override fun getApiResponse(apiResponseManager: ApiResponseManager<*>) {
         when (apiResponseManager.type) {
 
@@ -194,7 +236,6 @@ class OptionFragment : Fragment(),ApiResponseInterface {
                         chatListAdapter.clear()
                         if (response.data!!.size > 0) {
                             chatListAdapter.addAll(response.data!!)
-                            rv_chat.smoothScrollToPosition(response.data!!.size)
 
                         } else {
 
@@ -205,6 +246,29 @@ class OptionFragment : Fragment(),ApiResponseInterface {
                 }
             }
 
+            WebConstant.GET_STATUS -> {
+                val response = apiResponseManager.response as BtnStatusModel
+
+                when (response.status) {
+                    200 -> {
+                       if(response.data?.ticketButton.equals("yes")){
+                             rl_buy_tickets.visible()
+                       }else{
+                           rl_buy_tickets.gone()
+
+                       }
+
+                        if(response.data?.pointButton.equals("yes")){
+                            rl_buy_points.visible()
+                        }else{
+                            rl_buy_points.gone()
+
+                        }
+
+                    }
+                    else -> ShowToast(response.message!!, activity!!)
+                }
+            }
 
         }
     }

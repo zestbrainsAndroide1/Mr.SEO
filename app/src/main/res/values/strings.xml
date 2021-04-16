@@ -142,5 +142,6 @@
     <string name="points">/20</string>
     <string name="public_notice">Public Notice</string>
     <string name="notes">Oops!! You dont have sufficient coin in your account.Please Buy Coin.</string>
+    <string name="admin_chat">Admin Chat</string>
 
 </resources>

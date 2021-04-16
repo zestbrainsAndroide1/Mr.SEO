@@ -92,6 +92,15 @@ class ProfileFragment : Fragment(), ApiResponseInterface {
             transaction.addToBackStack(null) // if written, this transaction will be added to backstack
             transaction.commit()
         })
+
+        img_back.setOnClickListener(View.OnClickListener {
+
+            val someFragment: Fragment = UserDetailFragment()
+            val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
+            transaction.replace(R.id.frmContainer, someFragment)
+            transaction.addToBackStack(null) // if written, this transaction will be added to backstack
+            transaction.commit()
+        })
     }
 
     private fun logoutDialog() {

@@ -21,6 +21,7 @@ import com.zb.mrseo.R
 import com.zb.mrseo.SupportActivity
 import com.zb.mrseo.adapter.HelperDetailAdapter
 import com.zb.mrseo.adapter.HomeAdapter
+import com.zb.mrseo.interfaces.OnChatOptionClick
 import com.zb.mrseo.interfaces.OnPlatformClick
 import com.zb.mrseo.interfaces.OnStatusClick
 import com.zb.mrseo.model.LoginModel
@@ -37,7 +38,7 @@ import kotlinx.android.synthetic.main.activity_product.cvApplyForHelp
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 
-class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick {
+class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,OnChatOptionClick {
     var postId: String = ""
     var mUserModel: LoginModel.Data? = null
     lateinit var helperDetailAdapter: HelperDetailAdapter
@@ -65,7 +66,7 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick {
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
 
-        helperDetailAdapter = HelperDetailAdapter(this@HelpActivity, this@HelpActivity,postId)
+        helperDetailAdapter = HelperDetailAdapter(this@HelpActivity, this@HelpActivity,postId,categoryId,this)
         val linearLayoutManager1 =
             LinearLayoutManager(
                 this@HelpActivity,
@@ -111,6 +112,12 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick {
 
 
         })
+
+        img_back_help.setSafeOnClickListener {
+            onBackPressed()
+        }
+
+
 
         getPostDetail()
     }
@@ -394,6 +401,23 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick {
                 null
             )
         }
+    }
+
+    override fun onChatClick(
+        pos: Int,
+        helpId: String,
+        threadId: String,
+        receiverId: String,
+        receiverName: String
+    ) {
+        val intent = Intent(this@HelpActivity, ChatHistoryActivity::class.java)
+        intent.putExtra("id",threadId)
+        intent.putExtra("title",receiverName)
+        intent.putExtra("receiverId",receiverId)
+        intent.putExtra("type","help_list")
+
+        startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
 

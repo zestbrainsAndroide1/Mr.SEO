@@ -60,7 +60,7 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
     private var password: String = ""
     private var name: String = ""
     private var nickName: String = ""
-    private var countryCode: String = ""
+    private var countryCode: String = "+82"
     private var deviceId: String = ""
     private var mobile: String = ""
     private var deviceType: String = "Android"
@@ -96,7 +96,6 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
         tvCountry.text = getCountryCode()
 */
         cvSignUp.setSafeOnClickListener {
-            countryCode = getCountryCode()
             email = edt_email.text.toString()
             password = edt_password.text.toString()
             name = edtName.text.toString()
@@ -160,7 +159,7 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
         }
 
         cl_bank_img_sign_up.setOnClickListener(View.OnClickListener {
-            isProfile="false"
+            isProfile = "false"
             PermissionChecker(
                 this@SignUpActivity, this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -246,17 +245,17 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
         if (resultCode == Activity.RESULT_OK) {
 
 
-                //Image Uri will not be null for RESULT_OK
-                val fileUri = data?.data
+            //Image Uri will not be null for RESULT_OK
+            val fileUri = data?.data
 
-                //You can get File object from intent
-                val file: File = com.github.dhaval2404.imagepicker.ImagePicker.getFile(data)!!
+            //You can get File object from intent
+            val file: File = com.github.dhaval2404.imagepicker.ImagePicker.getFile(data)!!
 
-                //You can also get File Path from intent
-                bankImagePath = ImagePicker.getFilePath(data)!!
-
-                img_bank_sign_up.setImageBitmap(null)
-                img_bank_sign_up!!.setImageURI(fileUri)
+            //You can also get File Path from intent
+            bankImagePath = ImagePicker.getFilePath(data)!!
+            img_camera.gone()
+            img_bank_sign_up.setImageBitmap(null)
+            img_bank_sign_up!!.setImageURI(fileUri)
 
 
         } else if (resultCode == com.github.dhaval2404.imagepicker.ImagePicker.RESULT_ERROR) {
@@ -350,9 +349,7 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
         } else false
     }
 
-    private fun getCountryCode(): String {
-        return ccp_login_country.selectedCountryCodeWithPlus.toString().trim()
-    }
+
 
     private fun sendOtp() {
         if (isNetworkAvailable(this@SignUpActivity)) {
@@ -362,7 +359,7 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
                 objectType = ApiInitialize.initialize()
                     .sendOtp(
                         mobile,
-                        getCountryCode(),
+                        countryCode,
                         "1",
                         token
 

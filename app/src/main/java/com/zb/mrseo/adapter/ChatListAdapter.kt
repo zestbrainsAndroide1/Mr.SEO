@@ -58,15 +58,15 @@ class ChatListAdapter(private val mActivity: Context) :
     ) {
 
         holder.tvMsg.text=filteredData[listPosition].messageLatest!!.message.toString()
-        holder.tvUser.text=filteredData[listPosition].senderUser!!.name.toString()
+        holder.tvUser.text=filteredData[listPosition].receiverUser!!.name.toString()
         holder.tvTime.text=getUTCTOLOCALFromServer(filteredData[listPosition].messageLatest!!.createdAt.toString())
 
         holder.llMain.setOnClickListener(View.OnClickListener {
 
             val intent = Intent(mActivity, ChatHistoryActivity::class.java)
             intent.putExtra("id",filteredData[listPosition].messageLatest!!.threadsId.toString())
-            intent.putExtra("title",filteredData[listPosition].senderUser!!.name.toString())
-            intent.putExtra("receiverId",filteredData[listPosition].messageLatest!!.senderId.toString())
+            intent.putExtra("title",filteredData[listPosition].receiverUser!!.name.toString())
+            intent.putExtra("receiverId",filteredData[listPosition].receiverUser!!.id.toString())
 
             (mActivity as Activity).startActivity(intent)
             (mActivity as Activity).overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)

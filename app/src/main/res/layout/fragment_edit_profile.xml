@@ -8,7 +8,7 @@
     tools:context=".fragment.EditProfileFragment">
 
     <ImageView
-        android:id="@+id/img_back"
+        android:id="@+id/img_back_edit_profile"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_marginStart="20dp"
@@ -36,7 +36,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_back">
+        app:layout_constraintTop_toBottomOf="@id/img_back_edit_profile">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -215,6 +215,8 @@ android:maxLength="10"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginTop="@dimen/_6sdp"
+
+                        android:visibility="gone"
                         android:layout_marginEnd="@dimen/_15sdp"
                         android:gravity="center_vertical"
                         app:ccpDialog_background="@color/white"

@@ -76,6 +76,26 @@ class MainActivity : AppCompatActivity() {
 
             setBottomIcon()
             imgContent.setImageResource(R.drawable.content_select)
+        }else if (show.equals("option")) {
+            val bundle = Bundle()
+            bundle.putString("show", "user")
+            val contentFragment: Fragment = OptionFragment()
+            contentFragment!!.setArguments(bundle)
+
+            replaceFragment(contentFragment)
+
+            setBottomIcon()
+            imgContent.setImageResource(R.drawable.chat_select)
+        } else if (show.equals("option_admin")) {
+            val bundle = Bundle()
+            bundle.putString("show", "admin")
+            val contentFragment: Fragment = OptionFragment()
+            contentFragment!!.setArguments(bundle)
+
+            replaceFragment(contentFragment)
+
+            setBottomIcon()
+            imgContent.setImageResource(R.drawable.chat_select)
         } else if (show.equals("profile")) {
             replaceFragment(UserDetailFragment())
 

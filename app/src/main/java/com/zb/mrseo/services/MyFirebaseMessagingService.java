@@ -17,7 +17,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.zb.mrseo.MainActivity;
 import com.zb.mrseo.R;
+import com.zb.mrseo.activity.ChatActivity;
+import com.zb.mrseo.activity.ChatHistoryActivity;
 import com.zb.mrseo.restapi.WebConstant;
 import com.zb.mrseo.utility.AppConstants;
 import com.zb.mrseo.utility.Prefs2;
@@ -43,18 +46,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
 //kryo but push nthi avtu
-        Log.e("PUSHH : ",remoteMessage.getData().toString());
+        Log.e("PUSHH : ", remoteMessage.getData().toString());
 
-         title = remoteMessage.getData().get("push_from");
-       /* title = "Get Up People";*/
-        msg = remoteMessage.getData().get("push_from");
+        title = remoteMessage.getData().get("push_title");
+        /* title = "Get Up People";*/
+        msg = remoteMessage.getData().get("push_message");
 
         if (remoteMessage.getData().size() > 0) {
 
             try {
                 HashMap<String, String> dataMap = getDataHashMap(new JSONObject(remoteMessage.getData()));
 
-                sendNotification(title, msg,dataMap);
+                sendNotification(title, msg, dataMap);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -62,13 +65,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendNotification(String title, String notificationBody,HashMap<String, String> dataMap) {
+    private void sendNotification(String title, String notificationBody, HashMap<String, String> dataMap) {
 
         NotificationCompat.Builder notificationBuilder;
 
         int interval;
         long totalTime;
-        Intent intent=null;
+        Intent intent = null;
 
 
         /*intent = new Intent(this, SplashActivity.class);
@@ -80,24 +83,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent1.putExtra(WebConstant.ARGUMENT_ITEM_DATA, dataMap);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent1);
             return;
-        } else if (dataMap.get("push_type").equals("9")) {
+        } else if (dataMap.get("push_type").equals("1")) {
 
-           /* if (AppConstants.ISHOME_ACTVITY_OPEN) {
-                Intent intent1 = new Intent("chat");
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent1);
-            }
+            intent = new Intent(this, ChatHistoryActivity.class);
+            intent.putExtra("show", dataMap.get("option"));
+            intent.putExtra("id", dataMap.get("object_id"));
+            intent.putExtra("type", "notification");
+            intent.putExtra("receiverId", dataMap.get("user_id"));
 
-            intent = new Intent(this, MessageActivity.class);
-            intent.putExtra("id",dataMap.get("object_id"));
-            intent.putExtra("name",dataMap.get("push_from").replace("sent you new message",""));
-            intent.putExtra("receiverId",dataMap.get("user_id"));
-*/
+
+        } else if (AppConstants.ISCHAT_ACTVITY_OPEN && dataMap.get("push_type").equals("2") && AppConstants.OPEND_THREAD.equals(dataMap.get("object_id"))) {
+            Intent intent1 = new Intent("chat");
+            intent1.putExtra(WebConstant.ARGUMENT_ITEM_DATA, dataMap);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent1);
+            return;
+        } else if (dataMap.get("push_type").equals("2")) {
+
+            intent = new Intent(this, ChatActivity.class);
+            intent.putExtra("id", dataMap.get("object_id"));
+            intent.putExtra("title", dataMap.get("push_message"));
+            intent.putExtra("receiverId", dataMap.get("user_id"));
+            intent.putExtra("type", dataMap.get("messageType"));
+
 
 
         }
 
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -134,7 +147,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
         }
         notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher));
-        notificationBuilder.setContentTitle(title.replace("sent you new message",""));
+        notificationBuilder.setContentTitle(title.replace("sent you new message", ""));
         notificationBuilder.setContentText(notificationBody);
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setContentIntent(pendingIntent);
@@ -156,6 +169,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     }
+
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
@@ -163,6 +177,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.e("Push Token", s);
 
     }
+
     public HashMap<String, String> getDataHashMap(JSONObject jsonData) throws JSONException {
         HashMap<String, String> getData = new HashMap<>();
         Iterator<String> keysItr = jsonData.keys();

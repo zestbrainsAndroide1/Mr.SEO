@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.zb.moodlist.utility.*
+import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
 import com.zb.mrseo.model.ApplyModel
 import com.zb.mrseo.model.LoginModel
@@ -25,6 +26,7 @@ class PostDetailActivity : AppCompatActivity(), ApiResponseInterface {
 
     var postId: String = ""
     var mUserModel: LoginModel.Data? = null
+    var mDetail: ApplyModel.Data? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,8 @@ class PostDetailActivity : AppCompatActivity(), ApiResponseInterface {
 
 
         }
+       mDetail = intent.getSerializableExtra("detail") as? ApplyModel.Data
+
         setUi()
     }
 
@@ -44,10 +48,25 @@ class PostDetailActivity : AppCompatActivity(), ApiResponseInterface {
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
 
+
+
         cvApplyForHelp.setSafeOnClickListener {
-            applyForHelp()
+
+            val intent = Intent(this@PostDetailActivity, ChatHistoryActivity::class.java)
+            intent.putExtra("id",mDetail!!.threadsId.toString())
+            intent.putExtra("title",mDetail!!.receiverName.toString())
+            intent.putExtra("receiverId",mDetail!!.receiverId.toString())
+            intent.putExtra("type","detail")
+
+            startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+            finish()
         }
         getPostDetail()
+
+        img_back_post_detail.setSafeOnClickListener {
+            onBackPressed()
+        }
     }
 
     private fun getPostDetail() {
@@ -105,7 +124,6 @@ class PostDetailActivity : AppCompatActivity(), ApiResponseInterface {
             )
         }
     }
-
 
     override fun getApiResponse(apiResponseManager: ApiResponseManager<*>) {
         when (apiResponseManager.type) {
@@ -165,7 +183,17 @@ class PostDetailActivity : AppCompatActivity(), ApiResponseInterface {
 
                             }
 
+                            if (response.data!!.platformName!!.equals("")) {
+                                tv_name.gone()
+                                tv_open_market1.gone()
+                                line_first1.gone()
+                            }
 
+                            if (response.data!!.keyword!!.equals("")) {
+                                tv_keyword1.gone()
+                                tv_keyword_name.gone()
+                                line_second.gone()
+                            }
 
 
                         } catch (e: Exception) {
@@ -188,9 +216,11 @@ class PostDetailActivity : AppCompatActivity(), ApiResponseInterface {
                         intent.putExtra("id",response.data!!.threadsId.toString())
                         intent.putExtra("title",response.data!!.receiverName.toString())
                         intent.putExtra("receiverId",response.data!!.receiverId.toString())
+                        intent.putExtra("type","detail")
+
                         startActivity(intent)
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-
+                        finish()
 
                     }
                     else -> ShowToast(response.message!!, this@PostDetailActivity)
@@ -201,4 +231,14 @@ class PostDetailActivity : AppCompatActivity(), ApiResponseInterface {
         }
     }
 
+    override fun onBackPressed() {
+        val intent = Intent(this@PostDetailActivity, MainActivity::class.java)
+        intent.putExtra("show","")
+        startActivity(intent)
+        overridePendingTransition(
+            R.anim.slide_in_right,
+            R.anim.slide_out_left
+        )
+        finish()
+    }
 }

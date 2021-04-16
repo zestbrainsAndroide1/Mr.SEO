@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.zb.moodlist.utility.gone
+import com.zb.moodlist.utility.showToast
 import com.zb.moodlist.utility.visible
 import com.zb.mrseo.R
 import com.zb.mrseo.activity.*
+import com.zb.mrseo.interfaces.OnDeleteClick
 import com.zb.mrseo.interfaces.OnPlatformClick
 import com.zb.mrseo.model.HomeModel
 import com.zb.mrseo.model.MyHelperModel
@@ -29,14 +31,12 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class HelperAdapter(
     private val mActivity: Context,
-    val onPlatformClick: OnPlatformClick
+    val onDeleteClick: OnDeleteClick
 ) :
     RecyclerView.Adapter<HelperAdapter.MyViewHolder>() {
     private var mModel = ArrayList<MyHelperModel.Datum>()
 
-
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
 
 
 
@@ -53,7 +53,6 @@ class HelperAdapter(
         var cvHelp: CardView = itemView.findViewById(R.id.cv_home)
 
 
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -68,31 +67,34 @@ class HelperAdapter(
         @SuppressLint("RecyclerView") listPosition: Int
     ) {
 
+
+
+
         holder.tvCategoryName.text = mModel[listPosition].title.toString()
         holder.tvStatus.text = mModel[listPosition].status.toString()
         holder.tvTitle.text = mModel[listPosition].name.toString()
 
-        if(mModel[listPosition].keyword.toString().equals("")){
+        if (mModel[listPosition].keyword.toString().equals("")) {
             holder.llKeyword.gone()
-        }else{
+        } else {
             holder.llKeyword.visible()
             holder.tvKeywordTitle.text = mModel[listPosition].keyword.toString()
 
         }
 
-        if(mModel[listPosition].categoryId.toString().equals("1")){
+        if (mModel[listPosition].categoryId.toString().equals("1")) {
             holder.tvTypeName.text = mActivity.getString(R.string.shopping_mall_name)
 
-        }else if(mModel[listPosition].categoryId.toString().equals("2")){
+        } else if (mModel[listPosition].categoryId.toString().equals("2")) {
             holder.tvTypeName.text = mActivity.getString(R.string.shopping_mall_name)
 
-        }else if(mModel[listPosition].categoryId.toString().equals("3")){
+        } else if (mModel[listPosition].categoryId.toString().equals("3")) {
             holder.tvTypeName.text = mActivity.getString(R.string.blog_name)
 
-        }else if(mModel[listPosition].categoryId.toString().equals("4")){
+        } else if (mModel[listPosition].categoryId.toString().equals("4")) {
             holder.tvTypeName.text = mActivity.getString(R.string.cafe_name)
 
-        }else{
+        } else {
 
         }
 
@@ -107,7 +109,7 @@ class HelperAdapter(
         }
         holder.cvHelp.setOnClickListener(View.OnClickListener {
             val intent = Intent(mActivity, HelpDetailActivity::class.java)
-            intent.putExtra("id",mModel[listPosition].helpId.toString())
+            intent.putExtra("id", mModel[listPosition].helpId.toString())
             (mActivity as Activity).startActivity(intent)
             (mActivity as Activity).overridePendingTransition(
                 R.anim.slide_in_right,
@@ -118,15 +120,28 @@ class HelperAdapter(
         })
         holder.llChat.setOnClickListener(View.OnClickListener {
             val intent = Intent(mActivity, ChatHistoryActivity::class.java)
-            intent.putExtra("id",mModel[listPosition].threadId.toString())
-           /* intent.putExtra("title",mModel[listPosition].receiverName.toString())
-            intent.putExtra("receiverId",mModel[listPosition].receiverId.toString())
-           */ (mActivity as Activity).startActivity(intent)
+            intent.putExtra("id", mModel[listPosition].threadId.toString())
+            intent.putExtra("type", "helper_post")
+
+            (mActivity as Activity).startActivity(intent)
             (mActivity as Activity).overridePendingTransition(
                 R.anim.slide_in_right,
                 R.anim.slide_out_left
             )
 
+        })
+        holder.cvHelp.setOnLongClickListener(object :View.OnLongClickListener {
+            override fun onLongClick(p0: View?): Boolean {
+                if(mModel[listPosition].status.equals("finished")){
+                    onDeleteClick.OnDeleteClick(listPosition,mModel[listPosition].helpId.toString())
+                    showToast(mModel[listPosition].title.toString(),mActivity as Activity)
+                }else{
+
+                }
+
+                return true
+
+            }
         })
     }
 
@@ -144,4 +159,6 @@ class HelperAdapter(
         mModel.clear()
         notifyDataSetChanged()
     }
+
+
 }

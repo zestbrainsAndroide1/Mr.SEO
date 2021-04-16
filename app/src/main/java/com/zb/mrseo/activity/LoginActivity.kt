@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity(), ApiResponseInterface {
                     return@OnCompleteListener
                 }
                 token = task.result.toString()
-                Log.i("SEO", token)
+                Log.i("Push", token)
             })
 
 //        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener { instanceIdResult ->
@@ -143,6 +143,7 @@ class LoginActivity : AppCompatActivity(), ApiResponseInterface {
                         "android",
                         deviceId,
                         token
+
 
                     ),
                 TYPE = WebConstant.SIGN_IN,

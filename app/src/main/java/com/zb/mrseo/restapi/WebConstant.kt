@@ -49,6 +49,7 @@ object WebConstant {
     const val EDIT_SHOP_ONLINE= 40
     const val CHANGE_STATUS= 41
     const val GET_NOTICE= 42
+    const val GET_STATUS= 43
 
 
 

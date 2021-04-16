@@ -1,14 +1,23 @@
 package com.zb.mrseo.activity
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import `in`.aabhasjindal.otptextview.OTPListener
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.TaskExecutors
+
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
 import com.zb.moodlist.utility.*
 import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
 import com.zb.mrseo.model.DataModel
-import com.zb.mrseo.model.SendOtpModel
 import com.zb.mrseo.model.SignUpModel
 import com.zb.mrseo.model.VerifyOtpModel
 import com.zb.mrseo.restapi.*
@@ -20,12 +29,18 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class OtpActivity : AppCompatActivity(), ApiResponseInterface {
     lateinit var dataModel: DataModel
     var token: String = ""
     var deviceId: String = ""
     var deviceType: String = "android"
+     var OTP:String=""
+    var number: String = ""
+
+    private var mAuth: FirebaseAuth? = null
+    private var mVerificationId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +51,14 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
 
 
         }
+
+
+        //initializing objects
+
+        //initializing objects
+        mAuth = FirebaseAuth.getInstance()
+        sendVerificationCode(dataModel.mobile)
+
         deviceId = Settings.Secure.getString(
             this.contentResolver,
             Settings.Secure.ANDROID_ID
@@ -46,10 +69,23 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
 
     private fun setUi() {
         tv_no.text=dataModel.mobile.toString()
-        otp_view.otp = dataModel.otp.toString()
+        otp_view.setOtpListener(object : OTPListener {
+            override fun onInteractionListener() {
+                // fired when user types something in the Otpbox
+            }
 
+            override fun onOTPComplete(otp: String) {
+                // fired when user has entered the OTP fully.
+                OTP = otp
+            }
+        })
         cvVerify.setSafeOnClickListener {
-            verifyOtp()
+            if(!number.equals(OTP)){
+                showToast("Wrong Otp",this@OtpActivity)
+            }else{
+                verifyOtp()
+
+            }
         }
     }
 
@@ -145,7 +181,7 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
                         )
 
                         ShowToast(response.message!!, this@OtpActivity)
-                        start<MainActivity>()
+                        start<LoginActivity>()
                         finishAffinity()
 
 
@@ -185,7 +221,7 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
                 objectType = ApiInitialize.initialize()
                     .verifyOtp(
                         dataModel.mobile,
-                        dataModel.otp,
+                        OTP,
                         dataModel.countryCode,
                         "1",
                         token
@@ -207,5 +243,86 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
             )
         }
     }
+
+
+    private fun sendVerificationCode(mobile: String) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+            "+82" + mobile,
+            60,
+            TimeUnit.SECONDS,
+            this,
+            mCallbacks
+        )
+    }
+    //the callback to detect the verification status
+    private val mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks =
+        object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
+
+                //Getting the code sent by SMS
+                val code: String = phoneAuthCredential.getSmsCode()
+
+                //sometime the code is not detected automatically
+                //in this case the code will be null
+                //so user has to manually enter the code
+                if (code != null) {
+                    //editTextCode.setText(code);
+                    //verifying the code
+                    verifyVerificationCode(code)
+                    number = code
+                }
+            }
+
+            override fun onVerificationFailed(e: FirebaseException) {
+                Toast.makeText(this@OtpActivity, e.message, Toast.LENGTH_LONG).show()
+            }
+
+            override fun onCodeSent(
+                s: String,
+                forceResendingToken: PhoneAuthProvider.ForceResendingToken?
+            ) {
+                super.onCodeSent(s, forceResendingToken)
+
+                //storing the verification id that is sent to the user
+                mVerificationId = s
+            }
+        }
+
+
+    private fun verifyVerificationCode(code: String) {
+        //creating the credential
+        val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(mVerificationId, code)
+
+        //signing the user
+        signInWithPhoneAuthCredential(credential)
+    }
+
+    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
+        mAuth!!.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                OnCompleteListener<Any?> { task ->
+                    if (task.isSuccessful) {
+                        //verification successful we will start the profile activity
+                        Toast.makeText(this@OtpActivity, "Success", Toast.LENGTH_SHORT).show()
+                    } else {
+
+                        //verification unsuccessful.. display an error message
+                        var message = "Somthing is wrong, we will fix it soon..."
+                        if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                            message = "Invalid code entered..."
+                        }
+                        val snackbar = Snackbar.make(
+                            findViewById(R.id.parent),
+                            message, Snackbar.LENGTH_LONG
+                        )
+                        snackbar.setAction("Dismiss") { }
+                        snackbar.show()
+                    }
+                }
+            }
+    }
+
+
+
 
 }

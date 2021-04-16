@@ -1,42 +1,41 @@
 package com.zb.mrseo.adapter
 
-import android.app.Activity
-import com.zb.mrseo.activity.LoginActivity
-import com.zb.mrseo.activity.ProductActivity
-
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.kotlinpermissions.ifNotNullOrElse
-import com.zb.moodlist.utility.gone
-import com.zb.moodlist.utility.ifNotNullOrElse
-import com.zb.moodlist.utility.visible
+import com.zb.moodlist.utility.*
 import com.zb.mrseo.R
+import com.zb.mrseo.activity.ChatHistoryActivity
 import com.zb.mrseo.activity.PostDetailActivity
+import com.zb.mrseo.model.ApplyModel
 import com.zb.mrseo.model.HomeModel
-import com.zb.mrseo.model.PlatformListModel
-import de.hdodenhof.circleimageview.CircleImageView
+import com.zb.mrseo.model.LoginModel
+import com.zb.mrseo.model.PostModel
+import com.zb.mrseo.restapi.*
+import kotlinx.android.synthetic.main.activity_post_detail.*
 
 
 class HomeAdapter(
     private val mActivity: Context
 ) :
-    RecyclerView.Adapter<HomeAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<HomeAdapter.MyViewHolder>(),ApiResponseInterface{
     private var mModel = ArrayList<HomeModel.Data>()
-
+    var mUserModel: LoginModel.Data? = null
+var postId:String=""
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -101,17 +100,24 @@ class HomeAdapter(
             } catch (e: Exception) {
 
             }
+        mUserModel = Prefs.getObject(
+            mActivity,
+            AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
+        ) as LoginModel.Data
 
         holder.cvHome.setOnClickListener(View.OnClickListener {
+            postId=mModel[listPosition].postId.toString()
 
-            val intent = Intent(mActivity, PostDetailActivity::class.java)
-            intent.putExtra("id", mModel[listPosition].postId.toString())
-            (mActivity as Activity).startActivity(intent)
-            (mActivity as Activity).overridePendingTransition(
-                R.anim.slide_in_right,
-                R.anim.slide_out_left
-            )
+           applyForHelp(mModel[listPosition].postId.toString())
         })
+        holder.imgAdd.setOnClickListener(View.OnClickListener {
+
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(mModel[listPosition].advertisements?.url.toString())
+            (mActivity as Activity).startActivity(intent)
+        })
+
+
 
     }
 
@@ -129,4 +135,60 @@ class HomeAdapter(
         mModel.clear()
         notifyDataSetChanged()
     }
+
+    private fun applyForHelp(postId:String) {
+        if (isNetworkAvailable(mActivity)) {
+
+            ApiRequest<Any>(
+                activity = mActivity as Activity,
+                objectType = ApiInitialize.initialize()
+                    .applyForHelp(
+
+                        "Bearer ".plus(mUserModel!!.token.toString()),
+                        postId
+                    ),
+                TYPE = WebConstant.APPLY_FOR_HELP,
+                isShowProgressDialog = true,
+                apiResponseInterface = this@HomeAdapter
+            )
+
+        } else {
+            SnackBar.show(
+                mActivity as Activity,
+                true,
+                getStr(mActivity as Activity, R.string.str_network_error),
+                false,
+                "OK",
+                null
+            )
+        }
+    }
+    override fun getApiResponse(apiResponseManager: ApiResponseManager<*>) {
+        when (apiResponseManager.type) {
+
+            WebConstant.APPLY_FOR_HELP -> {
+                val response = apiResponseManager.response as ApplyModel
+
+                when (response.status) {
+                    200 -> {
+
+
+                        val intent = Intent(mActivity, PostDetailActivity::class.java)
+                        intent.putExtra("id", postId)
+                        intent.putExtra("detail",response.data)
+                        (mActivity as Activity).startActivity(intent)
+                        (mActivity as Activity).overridePendingTransition(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left
+                        )
+
+                    }
+                    else -> ShowToast(response.message!!, mActivity as Activity)
+                }
+            }
+
+
+        }
+    }
+
 }

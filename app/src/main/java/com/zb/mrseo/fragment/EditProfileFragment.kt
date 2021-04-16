@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -23,10 +24,7 @@ import com.zb.mrseo.R
 import com.zb.mrseo.activity.LoginActivity
 import com.zb.mrseo.adapter.BankListAdapter
 import com.zb.mrseo.interfaces.OnPlatformClick
-import com.zb.mrseo.model.EditProfileModel
-import com.zb.mrseo.model.LoginModel
-import com.zb.mrseo.model.LogoutModel
-import com.zb.mrseo.model.ViewProfileModel
+import com.zb.mrseo.model.*
 import com.zb.mrseo.restapi.*
 import com.zb.mrseo.utility.KeyboardUtils
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
@@ -54,7 +52,7 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
     private var password: String = ""
     private var name: String = ""
     private var nickName: String = ""
-    private var countryCode: String = ""
+    private var countryCode: String = "+82"
     private var deviceId: String = "1"
     private var mobile: String = ""
     private var deviceType: String = "Android"
@@ -113,7 +111,6 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
             )
         })
         cvAddEditProfile.setSafeOnClickListener {
-            countryCode = getCountryCode()
             email = edt_email_edit_profile.text.toString()
             name = edtUserName.text.toString()
             nickName = edt_nick_name.text.toString()
@@ -155,6 +152,15 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
         }
 
         getProfile()
+
+
+        img_back_edit_profile.setOnClickListener(View.OnClickListener {
+            val someFragment: Fragment = ProfileFragment()
+            val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
+            transaction.replace(R.id.frmContainer, someFragment)
+            transaction.addToBackStack(null) // if written, this transaction will be added to backstack
+            transaction.commit()
+        })
     }
 
     private fun editProfile() {
@@ -167,7 +173,7 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                 val name1 = name.toRequestBody("text/plain".toMediaTypeOrNull())
                 val nickName1 = nickName.toRequestBody("text/plain".toMediaTypeOrNull())
                 val countryCode1 =
-                    getCountryCode().toRequestBody("text/plain".toMediaTypeOrNull())
+                   countryCode.toRequestBody("text/plain".toMediaTypeOrNull())
                 val deviceId1 = deviceId.toRequestBody("text/plain".toMediaTypeOrNull())
                 val mobile1 = mobile.toRequestBody("text/plain".toMediaTypeOrNull())
 
@@ -252,9 +258,7 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
 
     }
 
-    private fun getCountryCode(): String {
-        return ccp_login_country.selectedCountryCodeWithPlus.toString().trim()
-    }
+
 
 
     private fun getProfile() {
@@ -349,6 +353,23 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                 }
             }
 
+            WebConstant.GET_BANK_LIST -> {
+                val response = apiResponseManager.response as BankListModel
+
+                when (response.status) {
+                    200 -> {
+
+                        bankListAdapter.clear()
+                        if (response.data!!.size > 0) {
+                            bankListAdapter.addAll(response.data!!)
+                        } else {
+
+                        }
+
+                    }
+                    else -> ShowToast(response.message!!, requireActivity())
+                }
+            }
 
         }
     }

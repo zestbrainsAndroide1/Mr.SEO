@@ -62,7 +62,15 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
     var context: Context? = null
     lateinit var imgAdapter: ImageAdapter
     var upload: Int = 0
-    var isUpload:Boolean=false
+    var isUpload: Boolean = false
+    var categoryId: String = ""
+
+    var isStatus: Boolean = false
+
+    var receiverId: String = ""
+    var threadId: String = ""
+
+    var receiverName: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +88,28 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
     }
 
     private fun setUi() {
+
+
+        img_back_help_detail.setSafeOnClickListener {
+            onBackPressed()
+        }
+
+
+
+        cvChatToOwner.setSafeOnClickListener {
+            val intent = Intent(this@HelpDetailActivity, ChatHistoryActivity::class.java)
+            intent.putExtra("id",threadId)
+            intent.putExtra("title",receiverName)
+            intent.putExtra("receiverId",receiverId)
+            intent.putExtra("type","help")
+
+            startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+        }
+
+
+
+
         mUserModel = Prefs.getObject(
             this@HelpDetailActivity,
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
@@ -120,6 +150,8 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
         ll_img.setSafeOnClickListener {
             if (addProductImages!!.size >= upload) {
                 showToast("You can upload max " + upload + " images", this@HelpDetailActivity)
+            }else if (addProductImages!!.size == 0 && isStatus==true) {
+                requestMultiplePermissions()
             } else {
                 requestMultiplePermissions()
 
@@ -168,6 +200,11 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                     200 -> {
 
                         try {
+
+                            categoryId = response.data!!.get(0)!!.categoryId!!.toString()
+                            receiverId= response.data!!.get(0)!!.toUserId!!.toString()
+                            receiverName = response.data!!.get(0)!!.toUserName!!.toString()
+                            threadId= response.data!!.get(0)!!.threadId!!.toString()
 
                             if (response.data!!.get(0)!!.categoryId!!.equals("1")) {
                                 //1
@@ -260,15 +297,37 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                             } else {
 
                             }
-                            if (response.data!!.get(0).proofImage!!.size > 0) {
+
+
+                            if(response.data?.get(0)?.status.equals("proofs_checked") || response.data?.get(0)?.status.equals("finished")){
                                 rvImg.gone()
                                 rvImg1.visible()
-                                ll_img.gone()
+                                ll_img.visible()
+                                img_upload_help.gone()
+
                                 imgAdapter.clear()
                                 imgAdapter.addAll(response.data!!.get(0).proofImage!!)
+                                cvSave.gone()
+                            }else if (response.data!!.get(0).proofImage!!.size == 1 && response.data!!.get(0).categoryId.equals("1")) {
+                                ll_img.visible()
+                                rvImg1.visible()
+                                img_upload_help.visible()
+                                rvImg.visible()
+                                imgAdapter.clear()
+                                imgAdapter.addAll(response.data!!.get(0).proofImage!!)
+                                isStatus = true
+                            } else if (response.data!!.get(0).proofImage!!.size > 0) {
+                                rvImg.gone()
+                                rvImg1.visible()
+                                ll_img.visible()
+                                img_upload_help.gone()
 
+                                imgAdapter.clear()
+                                imgAdapter.addAll(response.data!!.get(0).proofImage!!)
+                                cvSave.gone()
                             } else {
                                 rvImg1.gone()
+                                img_upload_help.visible()
                                 rvImg.visible()
                                 ll_img.visible()
 
@@ -289,11 +348,13 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                 when (response.status) {
                     200 -> {
 
-                        if(upload.equals("2")){
-                            isUpload=true
+                        if (upload == 2 && isUpload == false) {
+                            isUpload = true
                             upload()
+                        } else {
+                            getHelpDetail()
+
                         }
-                        getHelpDetail()
 
                     }
                     else -> ShowToast(response.message!!, this@HelpDetailActivity)
@@ -338,64 +399,9 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
         } else {
-/*
-            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
-*/
+
         }
-        /*if (requestCode == GALLERY) {
-            if (data != null) {
-                val contentURI = data.data
-                try {
-                    val bitmap = MediaStore.Images.Media.getBitmap(
-                        context!!.contentResolver,
-                        contentURI)
-                    imagesUrl = saveImage(bitmap) //String path = saveImage(bitmap);
 
-                    //tempUri=saveImage(bitmap);
-                    tempUri = getImageUri(context!!, Helper.getResizedBitmap(bitmap, 1000))
-
-                    imageUrlList!!.add(tempUri.toString())
-
-                    val addProductImage = AddProductImage()
-                    addProductImage.imageURI = imagesUrl
-                    addProductImage.uri = tempUri
-                    addProductImages!!.add(addProductImage)
-                    adapterAddProduct!!.notifyDataSetChanged()
-
-
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    Log.e("resulr", "failed " + e.message)
-                }
-            }
-        } else if (requestCode == CAMERA) {
-
-
-            if (data != null && data.extras != null) {
-
-                val contentURI = data.data
-                val thumbnail = data.extras!!["data"] as Bitmap?
-
-                imagesUrl =
-                    thumbnail?.let { saveImage(it) } //String path = saveImage(thumbnail);
-
-
-                val mImageUri = data.extras!!["data"] as Bitmap?
-                tempUri = getImageUri(context!!, Helper.getResizedBitmap(mImageUri!!, 1000))
-
-                imageUrlList!!.add(tempUri.toString())
-
-                val addProductImage = AddProductImage()
-                addProductImage.imageURI = imagesUrl
-                addProductImage.uri = tempUri
-                addProductImages!!.add(addProductImage)
-                adapterAddProduct!!.notifyDataSetChanged()
-            }
-
-
-        } else {
-
-        }*/
     }
 
     private fun requestMultiplePermissions() {
@@ -450,9 +456,22 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
             val requestFile1: RequestBody
             var profileImage1: MultipartBody.Part? = null
 
-            if(isUpload==true){
+            if (isUpload == true && isStatus==true) {
 
-                requestFile1 = File(addProductImages!![1].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
+                requestFile1 =
+                    File(addProductImages!![0].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
+                profileImage1 =
+                    MultipartBody.Part.createFormData(
+                        "file",
+                        "profile.jpg",
+                        requestFile1
+                    )
+                isStatus=false
+
+            }else if (isUpload == true) {
+
+                requestFile1 =
+                    File(addProductImages!![1].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
                 profileImage1 =
                     MultipartBody.Part.createFormData(
                         "file",
@@ -460,10 +479,10 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                         requestFile1
                     )
 
+            } else {
 
-            }else{
-
-                requestFile1 = File(addProductImages!![0].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
+                requestFile1 =
+                    File(addProductImages!![0].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
                 profileImage1 =
                     MultipartBody.Part.createFormData(
                         "file",
@@ -480,8 +499,8 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                 objectType = ApiInitialize.initialize()
                     .upload(
                         "Bearer ".plus(mUserModel!!.token.toString()),
-                       helpId1,
-                       profileImage1
+                        helpId1,
+                        profileImage1
                     ),
                 TYPE = WebConstant.UPLOAD,
                 isShowProgressDialog = true,
@@ -499,9 +518,10 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
             )
         }
     }
+
     override fun onBackPressed() {
         val intent = Intent(this@HelpDetailActivity, MainActivity::class.java)
-        intent.putExtra("show","content1")
+        intent.putExtra("show", "content1")
         startActivity(intent)
         overridePendingTransition(
             R.anim.slide_in_right,

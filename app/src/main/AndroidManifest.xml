@@ -32,7 +32,8 @@
         <activity android:name=".activity.HelpActivity" />
         <activity android:name=".activity.PostDetailActivity" />
         <activity android:name=".activity.ChangePwdActivity" />
-        <activity android:name=".activity.TransactionActivity" />
+        <activity android:name=".activity.TransactionActivity"
+            android:theme="@style/Theme.MrSeo1"/>
         <activity
             android:name=".activity.EditContentActivity"
             android:label="@string/title_activity_edit_content" />
@@ -77,18 +78,15 @@
 
         <service
             android:name=".services.MyFirebaseMessagingService"
-            android:enabled="true"
-            android:exported="false"
-            android:permission="true">
+           >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".services.FcmTokenRegistrationService"
-            android:enabled="true"
-            android:exported="false"
-            android:permission="true">
+
+           >
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

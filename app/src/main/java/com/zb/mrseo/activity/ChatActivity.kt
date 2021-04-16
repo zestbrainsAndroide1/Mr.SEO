@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zb.moodlist.utility.*
+import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
 import com.zb.mrseo.adapter.AdminMsgAdapter
 import com.zb.mrseo.adapter.HomeAdapter
@@ -119,10 +120,13 @@ class ChatActivity : AppCompatActivity(), ApiResponseInterface {
 
                 when (response.status) {
                     200 -> {
+                        AppConstants.OPEND_THREAD = response.data!!.get(0).threadsId.toString()
 
                         messageAdapter.clear()
                         if (response.data!!.size > 0) {
                             messageAdapter.addAll(response.data!!)
+                            rv_msg.smoothScrollToPosition(response.data!!.size)
+
                         } else {
 
                         }
@@ -204,5 +208,17 @@ class ChatActivity : AppCompatActivity(), ApiResponseInterface {
             )
         }
     }
+    override fun onBackPressed() {
 
+            val intent = Intent(this@ChatActivity, MainActivity::class.java)
+            intent.putExtra("show","option_admin")
+            startActivity(intent)
+            overridePendingTransition(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+            finish()
+
+
+    }
 }

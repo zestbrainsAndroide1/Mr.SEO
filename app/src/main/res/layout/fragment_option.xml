@@ -216,7 +216,7 @@
                     android:src="@drawable/coin" />
 
                 <TextView
-                    android:id="@+id/tv_coin_count"
+                    android:id="@+id/tv_coin_count_chat"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
 

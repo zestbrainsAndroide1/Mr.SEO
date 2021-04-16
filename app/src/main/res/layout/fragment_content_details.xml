@@ -92,7 +92,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="20dp"
                 android:alpha="0.5"
-                android:hint="@string/title1"
+                android:hint="@string/keyword"
                 android:outlineAmbientShadowColor="#D8D8D8"
                 android:outlineSpotShadowColor="#D8D8D8"
                 android:textColorHint="@color/text_color_hint"

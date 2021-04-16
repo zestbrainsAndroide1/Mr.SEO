@@ -23,6 +23,7 @@ import com.zb.moodlist.utility.invisible
 import com.zb.moodlist.utility.visible
 import com.zb.mrseo.R
 import com.zb.mrseo.activity.*
+import com.zb.mrseo.interfaces.OnChatOptionClick
 import com.zb.mrseo.interfaces.OnPlatformClick
 import com.zb.mrseo.interfaces.OnStatusClick
 import com.zb.mrseo.model.*
@@ -32,7 +33,9 @@ import de.hdodenhof.circleimageview.CircleImageView
 class HelperDetailAdapter(
     private val mActivity: Context,
     val onPlatformClick: OnStatusClick,
-    var postId:String
+    var postId:String,
+    var categoryId:String,
+    val onChatOptionClick: OnChatOptionClick
 ) :
     RecyclerView.Adapter<HelperDetailAdapter.MyViewHolder>() {
     private var mModel = ArrayList<MyPostDetailModel.Data.Helper>()
@@ -82,6 +85,13 @@ class HelperDetailAdapter(
         holder.tvBankName.text = mModel[listPosition].bankName.toString()
         holder.tvAccNo.text = mModel[listPosition].accountNumber.toString()
 
+        if(categoryId.equals("1")){
+            holder.btnCashSent.visible()
+        }else{
+            holder.btnViewProof.isEnabled=true
+            holder.btnCashSent.gone()
+
+        }
 
 
         holder.imgFirstProduct.setOnClickListener(View.OnClickListener {
@@ -215,10 +225,12 @@ class HelperDetailAdapter(
         })
         holder.btnGoToChat.setOnClickListener(View.OnClickListener {
             btnGoToChat = holder.btnGoToChat
-            onPlatformClick.onChatClick(
+            onChatOptionClick.onChatClick(
                 listPosition,
                 mModel[listPosition].helpId.toString(),
-                mModel[listPosition].threadId.toString()
+                mModel[listPosition].threadId.toString(),
+                mModel[listPosition].userId.toString(),
+                mModel[listPosition].userName.toString()
             )
 
         })

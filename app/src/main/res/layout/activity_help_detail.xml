@@ -8,7 +8,7 @@
     tools:context=".activity.HelpDetailActivity">
 
     <ImageView
-        android:id="@+id/img_back_post_detail"
+        android:id="@+id/img_back_help_detail"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_marginStart="20dp"
@@ -31,6 +31,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_back_help_detail">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:paddingBottom="@dimen/_40sdp"
+
+            android:layout_height="match_parent">
+
+
+
     <TextView
         android:id="@+id/tv_open_market_help"
         android:layout_width="wrap_content"
@@ -42,8 +57,9 @@
         android:text="@string/open_market"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_back_post_detail" />
+       />
 
 
     <TextView
@@ -56,8 +72,10 @@
         android:text="@string/name"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_16sp"
+        app:layout_constraintTop_toTopOf="parent"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_back_post_detail" />
+         />
 
 
     <ImageView
@@ -328,10 +346,19 @@
             android:visibility="gone"
             android:layout_height="wrap_content">
             <ImageView
+                android:id="@+id/img_upload_help"
                 android:layout_width="95dp"
                 android:layout_height="95dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/upload" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvImg1"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/row_img"></androidx.recyclerview.widget.RecyclerView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvImg"
                 android:layout_width="wrap_content"
@@ -345,7 +372,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvImg1"
+            android:id="@+id/rvImg2"
             android:layout_width="wrap_content"
             android:visibility="gone"
             android:layout_height="wrap_content"
@@ -407,6 +434,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_marginStart="20dp"
+        android:paddingBottom="@dimen/_40sdp"
         android:layout_marginTop="@dimen/margin_16dp"
         android:layout_marginEnd="20dp"
         app:cardBackgroundColor="@color/app_color"
@@ -428,5 +456,6 @@
                 android:textSize="@dimen/text_size_20sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

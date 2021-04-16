@@ -39,6 +39,20 @@ class MyHelpDetailModel {
         @Expose
         var userName: String? = null
 
+
+
+        @SerializedName("to_user_id")
+        @Expose
+        var toUserId: Int? = null
+
+        @SerializedName("to_user_name")
+        @Expose
+        var toUserName: String? = null
+
+
+
+
+
         @SerializedName("category_id")
         @Expose
         var categoryId: String? = null

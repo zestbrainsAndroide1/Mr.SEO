@@ -2,6 +2,7 @@ package com.zb.mrseo.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 class ApplyModel {
@@ -21,7 +22,7 @@ class ApplyModel {
     @Expose
     var data: Data? = null
 
-    class Data {
+    class Data : Serializable{
         @SerializedName("id")
         @Expose
         var id: Int? = null

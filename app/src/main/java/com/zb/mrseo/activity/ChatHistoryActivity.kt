@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zb.moodlist.utility.*
+import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
 import com.zb.mrseo.adapter.MessageAdapter
 import com.zb.mrseo.model.ChatListModel
@@ -26,7 +27,7 @@ class ChatHistoryActivity : AppCompatActivity(),ApiResponseInterface {
     var mUserModel: LoginModel.Data? = null
     var title:String=""
     var receiverId: String = ""
-
+    var type:String=""
 
 
     private val broadCastChat = object : BroadcastReceiver() {
@@ -49,11 +50,14 @@ class ChatHistoryActivity : AppCompatActivity(),ApiResponseInterface {
             threadId= extras.getString("id", "")
             title= extras.getString("title", "")
             receiverId = extras.getString("receiverId").toString()
+            type= extras.getString("type", "")
 
 
         }
 
-
+        img_back_chat.setSafeOnClickListener {
+           onBackPressed()
+        }
 
         img_send.setSafeOnClickListener {
             sendMessage()
@@ -156,9 +160,18 @@ class ChatHistoryActivity : AppCompatActivity(),ApiResponseInterface {
                 when (response.status) {
                     200 -> {
 
+                        if(type.equals("helper_post") || type.equals("notification")){
+                            receiverId=response.data?.get(0)?.receiverId.toString()
+                            title=response.data?.get(0)?.receiverName.toString()
+                            tv_user_name_chat.text=title.toString()
+
+                        }
+
                         messageAdapter.clear()
                         if (response.data!!.size > 0) {
                             messageAdapter.addAll(response.data!!)
+                            rv_msg.smoothScrollToPosition(response.data!!.size)
+
                         } else {
 
                         }
@@ -209,4 +222,33 @@ class ChatHistoryActivity : AppCompatActivity(),ApiResponseInterface {
         androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this).unregisterReceiver(broadCastChat)
     }
 
+    override fun onBackPressed() {
+        if(type.equals("details")){
+            val intent = Intent(this@ChatHistoryActivity, PostDetailActivity::class.java)
+            intent.putExtra("show","")
+            startActivity(intent)
+            overridePendingTransition(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+            finish()
+        }else if(type.equals("help")){
+            onBackPressed()
+        }else if(type.equals("help_list")){
+            onBackPressed()
+
+        }else if(type.equals("helper_post")){
+            onBackPressed()
+        }else{
+            val intent = Intent(this@ChatHistoryActivity, MainActivity::class.java)
+            intent.putExtra("show","option")
+            startActivity(intent)
+            overridePendingTransition(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+            finish()
+        }
+
+    }
 }
