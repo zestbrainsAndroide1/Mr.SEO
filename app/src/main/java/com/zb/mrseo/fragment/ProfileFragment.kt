@@ -120,7 +120,7 @@ class ProfileFragment : Fragment(), ApiResponseInterface {
         val tvNo = dialog1.findViewById(R.id.tvNo) as TextView
         val tvYes = dialog1.findViewById(R.id.tvYes) as TextView
         val tvTitle = dialog1.findViewById(R.id.tv_title) as TextView
-        tvTitle.text = "Are you sure you want to logout?"
+        tvTitle.text = "로그아웃 하시겠습니까?"
 
 
 
@@ -199,8 +199,9 @@ class ProfileFragment : Fragment(), ApiResponseInterface {
                 when (response.status) {
                     200 -> {
                         Prefs.removeValue(context = activity!!, key = AppConstant.USER_ID)
+                        Prefs.removeValue(context = activity!!, key = AppConstant.ACCOUNT_DATA)
 
-                        Prefs.clearAllData(activity!!)
+                        Prefs.clearAllData(requireActivity())
                         val intent = Intent(activity!!, LoginActivity::class.java)
                         startActivity(intent)
                         activity!!.overridePendingTransition(
@@ -238,7 +239,7 @@ class ProfileFragment : Fragment(), ApiResponseInterface {
                 activity = activity!!,
                 objectType = ApiInitialize.initialize()
                     .logout(
-                        Prefs.getValue(activity!!, AppConstant.TOKEN, "")!!
+                        "Bearer ".plus(mUserModel!!.token.toString())
                     ),
                 TYPE = WebConstant.LOGOUT,
                 isShowProgressDialog = true,

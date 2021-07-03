@@ -1,17 +1,11 @@
 package com.zb.mrseo.activity
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zb.moodlist.utility.*
 import com.zb.mrseo.R
-import com.zb.mrseo.adapter.HomeAdapter
 import com.zb.mrseo.adapter.TransactionAdapter
-import com.zb.mrseo.model.HomeModel
 import com.zb.mrseo.model.LoginModel
 import com.zb.mrseo.model.TransactionModel
 import com.zb.mrseo.restapi.*
@@ -32,6 +26,10 @@ class TransactionActivity : AppCompatActivity(), ApiResponseInterface {
     }
 
     private fun setUi() {
+        img_back.setOnClickListener {
+            finish()
+        }
+
         mUserModel = Prefs.getObject(
             this@TransactionActivity,
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
@@ -87,9 +85,12 @@ class TransactionActivity : AppCompatActivity(), ApiResponseInterface {
 
                         transactionAdapter.clear()
                         if (response.data!!.size > 0) {
+                            rv_transaction.visible()
+                            ll_no_data.gone()
                             transactionAdapter.addAll(response.data!!)
                         } else {
-
+                            rv_transaction.gone()
+                            ll_no_data.visible()
                         }
 
                     }

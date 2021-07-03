@@ -91,14 +91,14 @@
         app:bar_enabled="false"
         app:bar_height="3dp"
         app:bar_inactive_color="@color/black"
-        app:box_margin="20dp"
+        app:box_margin="10dp"
         app:height="54dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:length="4"
+        app:length="6"
         app:otp_box_background="@drawable/light_orange_rounded_filled_border_filled"
         app:otp_text_size="24dp"
-        app:width="54dp" />
+        app:width="45dp" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvVerify"
@@ -116,12 +116,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/otp_button"
+                android:background="@color/app_color"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/noto_semi_bold"
                 android:gravity="center"
-                android:text="Verify &amp; Proceed"
+                android:text="인증하기"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_20sp" />
         </LinearLayout>

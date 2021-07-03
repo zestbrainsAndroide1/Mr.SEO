@@ -6,6 +6,7 @@
     android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".fragment.AddContentFragment">
+
     <ImageView
         android:id="@+id/img_back"
         android:layout_width="26dp"
@@ -82,6 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="253dp"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:id="@+id/llOnlineShop"
                 android:layout_width="@dimen/margin_10dp"
@@ -97,15 +99,15 @@
                     android:layout_height="56dp"
                     android:visibility="gone"
                     android:src="@drawable/ic_basket"/>
+
                 <TextView
                     android:id="@+id/tv_forgot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:gravity="center"
                     android:fontFamily="@font/noto_medium"
-                    android:text="Help Online\n
-Shop (Buy)"
+                    android:gravity="center"
+                    android:text="쇼핑몰 리뷰 품앗이"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_15sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -129,15 +131,15 @@ Shop (Buy)"
                     android:layout_height="56dp"
                     android:visibility="gone"
                     android:src="@drawable/ic_cart"/>
+
                 <TextView
                     android:id="@+id/tv_cart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:gravity="center"
                     android:fontFamily="@font/noto_medium"
-                    android:text="Help Online\n
-Shop (Browse)"
+                    android:gravity="center"
+                    android:text="쇼핑몰 트래픽 품앗이"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_15sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -166,15 +168,15 @@ Shop (Browse)"
                     android:layout_height="56dp"
                     android:visibility="gone"
                     android:src="@drawable/ic_notes"/>
+
                 <TextView
                     android:id="@+id/tv_blog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:gravity="center"
                     android:fontFamily="@font/noto_medium"
-                    android:text="Help\n
-Blog"
+                    android:gravity="center"
+                    android:text="블로그\n품앗이"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_15sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -198,15 +200,18 @@ Blog"
                     android:layout_height="56dp"
                     android:visibility="gone"
                     android:src="@drawable/ic_cafe"/>
+<!--
+                카페\n품앗이
+-->
+
                 <TextView
                     android:id="@+id/tv_cafe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:gravity="center"
                     android:fontFamily="@font/noto_medium"
-                    android:text="Help\n
-Cafe"
+                    android:gravity="center"
+                    android:text="카페 댓글 품앗이"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_15sp"
                     app:layout_constraintEnd_toEndOf="parent"

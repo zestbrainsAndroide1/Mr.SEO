@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zb.moodlist.utility.*
 import com.zb.mrseo.MainActivity
@@ -18,10 +18,8 @@ import com.zb.mrseo.R
 import com.zb.mrseo.activity.ChatActivity
 import com.zb.mrseo.activity.TransactionActivity
 import com.zb.mrseo.adapter.ChatListAdapter
-import com.zb.mrseo.adapter.HomeAdapter
 import com.zb.mrseo.model.BtnStatusModel
 import com.zb.mrseo.model.ChatListModel
-import com.zb.mrseo.model.HomeModel
 import com.zb.mrseo.model.LoginModel
 import com.zb.mrseo.restapi.*
 import com.zb.mrseo.utility.KeyboardUtils
@@ -34,7 +32,11 @@ class OptionFragment : Fragment(),ApiResponseInterface {
 
     lateinit var chatListAdapter: ChatListAdapter
     var mUserModel: LoginModel.Data? = null
-    var show:String=""
+    var show: String = ""
+
+    var chatList: java.util.ArrayList<ChatListModel.Datum>? =
+        java.util.ArrayList<ChatListModel.Datum>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,26 +44,38 @@ class OptionFragment : Fragment(),ApiResponseInterface {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_option, container, false)
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val bundle = this.arguments
         if (bundle != null) {
             show = bundle.getString("show").toString()
         }
-      setUi()
+        setUi()
     }
-    private fun setUi(){
+    /*private fun filterTax(text: String) {
+        val filteredList: java.util.ArrayList<TaxModel.Data.TaxList.TAXTYPE.SubMasters.List_> =
+            java.util.ArrayList<TaxModel.Data.TaxList.TAXTYPE.SubMasters.List_>()
+        for (item in taxtList!!) {
+            if (item.name!!.toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item)
+            }
+        }
+        taxAdapter.filterList(filteredList)
+    }*/
+
+    private fun setUi() {
         mUserModel = Prefs.getObject(
             activity!!,
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
-        tv_coin_count_chat.text=mUserModel?.coin.toString()
-        cv_coin_option.setSafeOnClickListener {
+        // tv_coin_count_chat.text = mUserModel?.coin.toString()
+        coin.setSafeOnClickListener {
             activity!!.start<TransactionActivity>()
-
-
         }
+
         if(show.equals("admin")){
+            img_no_data.gone()
             getChatOption()
             rl_user.visibility=View.GONE
             rl_admin.visibility=View.VISIBLE
@@ -69,6 +83,8 @@ class OptionFragment : Fragment(),ApiResponseInterface {
             cl_user.visibility=View.GONE
         }
         cvAdmin.setSafeOnClickListener {
+            img_no_data.gone()
+
             getChatOption()
 
             rl_user.visibility=View.GONE
@@ -78,6 +94,7 @@ class OptionFragment : Fragment(),ApiResponseInterface {
 
         }
         cvUser.setSafeOnClickListener {
+            img_no_data.gone()
             rl_user.visibility=View.VISIBLE
             rl_admin.visibility=View.GONE
             cl_admin.visibility=View.GONE
@@ -95,20 +112,19 @@ class OptionFragment : Fragment(),ApiResponseInterface {
         rv_chat?.adapter = chatListAdapter
 
         rl_buy_points.setOnClickListener(View.OnClickListener {
-
             val intent = Intent( activity!!, ChatActivity::class.java)
             intent.putExtra("type","point")
             activity!!.startActivity(intent)
             activity!!.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         })
-        rl_buy_tickets.setOnClickListener(View.OnClickListener {
 
+        rl_buy_tickets.setOnClickListener(View.OnClickListener {
             val intent = Intent( activity!!, ChatActivity::class.java)
             intent.putExtra("type","ticket")
-
             activity!!.startActivity(intent)
             activity!!.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         })
+
         getChatList()
 
 
@@ -204,7 +220,6 @@ class OptionFragment : Fragment(),ApiResponseInterface {
                 objectType = ApiInitialize.initialize()
                     .getStatus(
                         "Bearer ".plus(mUserModel!!.token.toString()),
-
                     ),
                 TYPE = WebConstant.GET_STATUS,
                 isShowProgressDialog = true,
@@ -232,13 +247,13 @@ class OptionFragment : Fragment(),ApiResponseInterface {
 
                 when (response.status) {
                     200 -> {
-
+                        coin.text = response.coin.toString()
                         chatListAdapter.clear()
                         if (response.data!!.size > 0) {
                             chatListAdapter.addAll(response.data!!)
-
+                            // img_no_data.gone()
                         } else {
-
+                            // img_no_data.visible()
                         }
 
                     }

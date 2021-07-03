@@ -216,7 +216,7 @@
 
 
             <ImageView
-                android:id="@+id/line_fourth"
+                android:id="@+id/line_point"
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
 
@@ -229,6 +229,54 @@
 
 
             <TextView
+                android:id="@+id/tv_helper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:alpha="0.7"
+
+                android:fontFamily="@font/noto_regular"
+                android:text="@string/helpers_wanted"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line_point" />
+
+            <TextView
+                android:id="@+id/tv_helper_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:fontFamily="@font/noto_regular"
+                android:text="20"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_shopping_mall_name_content"
+                app:layout_constraintTop_toBottomOf="@id/line_point" />
+
+
+
+
+
+
+
+
+
+            <ImageView
+                android:id="@+id/line_fourth"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="@dimen/margin_36dp"
+                android:layout_marginEnd="22dp"
+                android:layerType="software"
+                android:src="@drawable/dot_line"
+                app:layout_constraintTop_toBottomOf="@id/tv_helper" />
+
+
+            <TextView
                 android:id="@+id/tv_points"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -237,7 +285,7 @@
                 android:alpha="0.7"
 
                 android:fontFamily="@font/noto_regular"
-                android:text="@string/remaining_points"
+                android:text="@string/remaining_slots"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16sp"
                 app:layout_constraintStart_toStartOf="parent"

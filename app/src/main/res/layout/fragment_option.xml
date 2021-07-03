@@ -34,16 +34,56 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView3"
+        android:layout_width="48dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="20dp"
+        app:cardCornerRadius="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_login" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/coin"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+            <TextView
+                android:id="@+id/coin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_medium"
+                android:gravity="center_vertical"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
     <LinearLayout
         android:id="@+id/ll_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="37dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_login">
-
 
 
         <RelativeLayout
@@ -109,13 +149,12 @@
         </RelativeLayout>
 
 
-
         <RelativeLayout
             android:id="@+id/rl_admin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginTop="@dimen/_20sdp"
+            android:visibility="gone"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -178,7 +217,6 @@
         </RelativeLayout>
 
 
-
     </LinearLayout>
 
 
@@ -191,6 +229,7 @@
         app:layout_constraintTop_toBottomOf="@id/ll_top">
 
         <androidx.cardview.widget.CardView
+            android:visibility="gone"
             android:id="@+id/cv_coin_option"
             android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_24sdp"
@@ -202,38 +241,11 @@
             app:cardElevation="@dimen/_2sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/img_coin1"
-                    android:layout_width="11dp"
-                    android:layout_height="11dp"
-                    android:src="@drawable/coin" />
-
-                <TextView
-                    android:id="@+id/tv_coin_count_chat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-
-                    android:layout_marginStart="4dp"
-                    android:fontFamily="@font/noto_medium"
-                    android:gravity="center_vertical"
-                    android:text="1"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_14sp" />
-
-            </LinearLayout>
-
-
         </androidx.cardview.widget.CardView>
 
 
         <RelativeLayout
+            android:layout_marginTop="30dp"
             android:id="@+id/rl_buy_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -276,13 +288,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:fontFamily="@font/noto_medium"
-                    android:gravity="center_horizontal"
-                    android:text="Buy\n Points"
+                    android:gravity="center"
+                    android:text="포인트\n구매"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_15sp" />
             </LinearLayout>
-
-
         </RelativeLayout>
 
 
@@ -330,8 +340,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:fontFamily="@font/noto_medium"
-                    android:gravity="center_horizontal"
-                    android:text="Buy\n Tickets"
+                    android:gravity="center"
+                    android:text="송장구매"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_15sp" />
             </LinearLayout>
@@ -411,5 +421,16 @@
             tools:listitem="@layout/row_chat" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/img_no_data"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="@dimen/_200sdp"
+        android:src="@drawable/no_data"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

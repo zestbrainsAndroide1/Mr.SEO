@@ -157,6 +157,22 @@
 
             </LinearLayout>
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_copy"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_22sdp"
+                android:text="@string/copy"
+                android:paddingTop="@dimen/_3sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:fontFamily="@font/noto_bold"
+                android:textSize="@dimen/text_size_12sp"
+                android:background="@drawable/round_corner"
+                 />
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -245,15 +261,14 @@
                     android:scaleType="fitXY"
                     android:layout_marginStart="@dimen/margin_10dp"
                     app:siShape="@drawable/round" />
-
             </LinearLayout>
 
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cvConfirm"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
-                android:visibility="gone"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="@dimen/margin_20dp"
                 android:layout_marginEnd="20dp"
@@ -261,12 +276,11 @@
                 app:cardCornerRadius="5dp"
                 app:cardElevation="@dimen/_2sdp"
                 >
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
                     <TextView
+                        android:id="@+id/con"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/noto_semi_bold"

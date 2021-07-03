@@ -194,18 +194,53 @@
                     android:textSize="15sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tl_point"
+                android:id="@+id/tl_helper"
                 style="@style/LoginTextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
-                android:layout_marginEnd="66dp"
+                android:layout_marginEnd="20dp"
                 android:alpha="0.5"
-                android:hint="@string/point"
+                android:hint="@string/no_of_helpers_wanted"
+                android:outlineAmbientShadowColor="#D8D8D8"
+                android:outlineSpotShadowColor="#D8D8D8"
+                android:textColorHint="@color/text_color_hint"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="5dp"
+                app:boxCornerRadiusBottomStart="5dp"
+                app:boxCornerRadiusTopEnd="5dp"
+                app:boxCornerRadiusTopStart="5dp"
+                app:boxStrokeColor="#D8D8D8"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_color_hint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tl_decs">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtHelpersContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/noto_regular"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_point"
+                style="@style/LoginTextInputLayoutStyle"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:alpha="0.5"
+                android:hint="@string/required_point_to_register"
                 android:outlineAmbientShadowColor="#D8D8D8"
                 android:outlineSpotShadowColor="#D8D8D8"
                 android:textColorHint="@color/text_color_hint"
@@ -215,8 +250,9 @@
                 app:boxStrokeColor="#D8D8D8"
                 app:boxStrokeWidth="1dp"
                 app:hintTextColor="@color/text_color_hint"
+                app:layout_constraintEnd_toEndOf="@+id/tl_helper"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tl_decs">
+                app:layout_constraintTop_toBottomOf="@id/tl_helper">
 
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -231,19 +267,7 @@
                     android:textSize="15sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
-            <TextView
-                android:id="@+id/tv_total_points_shop"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="48dp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14ssp"
-                android:fontFamily="@font/noto_medium"
-                android:text="@string/points"
-                app:layout_constraintTop_toBottomOf="@id/tl_decs"
-                app:layout_constraintStart_toEndOf="@id/tl_point"
-                android:background="@drawable/point_bg"
-                android:layout_marginTop="@dimen/margin_29dp"/>
+
             <TextView
                 android:id="@+id/tv_note_shop"
                 android:layout_width="match_parent"
@@ -285,6 +309,19 @@
                         android:textSize="@dimen/text_size_20sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/cvAdd"
+                android:fontFamily="@font/noto_medium"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/margin_20dp"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:layout_marginEnd="@dimen/margin_20dp"
+                android:text="포인트가 부족할 경우\n다른 품앗이에 참여하면\n포인트를 획득할 수 있습니다"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_20sp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

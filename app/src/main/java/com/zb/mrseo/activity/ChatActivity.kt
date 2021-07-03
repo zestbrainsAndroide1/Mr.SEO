@@ -4,21 +4,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zb.moodlist.utility.*
 import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
 import com.zb.mrseo.adapter.AdminMsgAdapter
-import com.zb.mrseo.adapter.HomeAdapter
-import com.zb.mrseo.adapter.MessageAdapter
 import com.zb.mrseo.model.*
 import com.zb.mrseo.restapi.*
 import com.zb.mrseo.utility.AppConstants
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.util.HashMap
+import java.util.*
 
 class ChatActivity : AppCompatActivity(), ApiResponseInterface {
     lateinit var messageAdapter: AdminMsgAdapter
@@ -52,7 +50,15 @@ class ChatActivity : AppCompatActivity(), ApiResponseInterface {
 
         }
         img_send.setSafeOnClickListener {
-            sendMessage()
+            if (!edt_msg.text.toString().equals("")) {
+                sendMessage()
+                edt_msg.text.clear()
+            } else {
+                showToast(getString(R.string.msg_validation), this@ChatActivity)
+            }
+        }
+        img_back_chat.setSafeOnClickListener {
+            onBackPressed()
         }
 
         mUserModel = Prefs.getObject(

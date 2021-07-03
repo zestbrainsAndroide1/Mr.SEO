@@ -3,6 +3,7 @@ package com.zb.mrseo
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -38,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         val extras = intent.extras
         if (extras != null) {
             img = extras.getString("img", "")
@@ -55,15 +58,18 @@ class MainActivity : AppCompatActivity() {
         val extras = intent.extras
         if (extras != null) {
             show = extras.getString("show", "")
-
-
         }
         cvMain = findViewById(R.id.llBottom)
+
+//        if(intent.getStringExtra("chat") == "채팅"){
+//            replaceFragment(OptionFragment())
+//            setBottomIcon()
+//            imgContent.setImageResource(R.drawable.content_select)
+//        }
 
 
         if (show.equals("content")) {
             replaceFragment(ContentFragment())
-
             setBottomIcon()
             imgContent.setImageResource(R.drawable.content_select)
         } else if (show.equals("content1")) {
@@ -73,10 +79,9 @@ class MainActivity : AppCompatActivity() {
             contentFragment!!.setArguments(bundle)
 
             replaceFragment(contentFragment)
-
             setBottomIcon()
             imgContent.setImageResource(R.drawable.content_select)
-        }else if (show.equals("option")) {
+        }else if (show.equals("option") || intent.getStringExtra("chat") == "채팅") {
             val bundle = Bundle()
             bundle.putString("show", "user")
             val contentFragment: Fragment = OptionFragment()
@@ -85,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(contentFragment)
 
             setBottomIcon()
-            imgContent.setImageResource(R.drawable.chat_select)
+            imgChat.setImageResource(R.drawable.chat_select)
         } else if (show.equals("option_admin")) {
             val bundle = Bundle()
             bundle.putString("show", "admin")
@@ -95,7 +100,7 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(contentFragment)
 
             setBottomIcon()
-            imgContent.setImageResource(R.drawable.chat_select)
+            imgChat.setImageResource(R.drawable.chat_select)
         } else if (show.equals("profile")) {
             replaceFragment(UserDetailFragment())
 

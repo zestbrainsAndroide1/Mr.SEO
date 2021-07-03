@@ -10,7 +10,10 @@ import java.io.Serializable
 class DataModel(
     email: String, password: String, name: String, nickname: String, countryCode: String,
     mobile: String, bankName: String, accNo: String,otp: String,
-    bankImg: String
+    bankImg: String,
+    url: String,
+    mallCategory: String,
+    mallSubCategory: String
 ) : Serializable {
 
 
@@ -26,5 +29,8 @@ class DataModel(
     var otp: String = otp
     var bankImg: String = bankImg
 
+    var url: String = url
+    var mallCategory: String = mallCategory
+    var mallSubCategory: String = mallSubCategory
 
 }

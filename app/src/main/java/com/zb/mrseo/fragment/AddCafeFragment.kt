@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.ImageView
@@ -38,6 +39,8 @@ class AddCafeFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
     var mUserModel: LoginModel.Data? = null
     lateinit var dialog: Dialog
     lateinit var platformAdapter: PlatformAdapter
+    var point=""
+    var coin =""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +55,9 @@ class AddCafeFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
         val bundle = this.arguments
         if (bundle != null) {
             categoryId = bundle.getString("id").toString()
+            point = bundle.getString("point").toString()
+            coin  = bundle.getString("coin").toString()
+
         }
 
         setUi()
@@ -64,16 +70,47 @@ class AddCafeFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
 
-        tv_total_points_cafe.text = mUserModel!!.coin.toString()
-        if (mUserModel!!.coin.toString().equals("0")) {
-            edtPointCafe.isEnabled = false
-            tv_note_cafe.visible()
-            ShowToast("Oops, You don't have sufficient coin", requireActivity())
-        } else {
-            edtPointCafe.filters =
-                arrayOf<InputFilter>(InputFilterMinMax("1", mUserModel!!.coin.toString()))
+        edtHelpersCafe.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+            ) {
+            }
 
-        }
+            override fun onTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+            ) {
+                try{
+                    var helper=edtHelpersCafe.text.toString()
+                    var total=helper.toInt()*point.toInt()
+                    edtPointCafe.setText(total.toString())
+                    if(total > coin.toInt()){
+                        edtPointCafe.isEnabled=false
+                        tv_note_cafe.visible()
+                        ShowToast("Oops, You don't have sufficient coin",requireActivity())
+                    }else{
+                        tv_note_cafe.gone()
+
+                    }
+                }catch(e:Exception){
+
+                }
+
+
+
+            }
+
+            override fun afterTextChanged(s: Editable) {
+
+
+            }
+        })
+
         platformDialog()
 
         /*edtTitleCafe.setSafeOnClickListener {
@@ -142,7 +179,7 @@ class AddCafeFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
                         categoryId,
                         cafeName,
                         description,
-                        registerPoint,
+                        (registerPoint.toInt() / point.toInt()).toString(),
                         url
                     ),
                 TYPE = WebConstant.ADD_CAFE,

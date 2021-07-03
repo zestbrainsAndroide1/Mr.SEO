@@ -38,9 +38,18 @@ class MyPostDetailModel {
         @Expose
         var categoryId: String? = null
 
+        @SerializedName("helper_count")
+        @Expose
+        var helperCount: String? = null
+
+        @SerializedName("helper_user")
+        @Expose
+        var helperUser: String? = null
+
         @SerializedName("category_name")
         @Expose
         var categoryName: String? = null
+
 
         @SerializedName("platform_id")
         @Expose

@@ -5,7 +5,10 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-class CategoryModel {
+
+
+
+class CategoryModel{
     @SerializedName("status")
     @Expose
     var status: Int? = null
@@ -13,6 +16,10 @@ class CategoryModel {
     @SerializedName("message")
     @Expose
     var message: String? = null
+
+    @SerializedName("coin")
+    @Expose
+    var coin: String? = null
 
     @SerializedName("data")
     @Expose
@@ -27,20 +34,12 @@ class CategoryModel {
         @Expose
         var title: String? = null
 
-        @SerializedName("image")
+        @SerializedName("color")
         @Expose
-        var image: String? = null
+        var color: String? = null
 
-        @SerializedName("is_active")
+        @SerializedName("CategoryCoin")
         @Expose
-        var isActive: String? = null
-
-        @SerializedName("created_at")
-        @Expose
-        var createdAt: Any? = null
-
-        @SerializedName("updated_at")
-        @Expose
-        var updatedAt: Any? = null
+        var categoryCoin: String? = null
     }
 }

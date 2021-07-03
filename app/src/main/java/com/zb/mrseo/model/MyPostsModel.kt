@@ -61,5 +61,9 @@ class MyPostsModel {
         @SerializedName("helper_count")
         @Expose
         var helperCount: Int? = null
+
+        @SerializedName("helper_user")
+        @Expose
+        var helperUser: Int? = null
     }
 }

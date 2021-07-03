@@ -30,6 +30,10 @@ class PostModel {
         @Expose
         var userId: Int? = null
 
+        @SerializedName("thread_id")
+        @Expose
+        var threadsId: Int? = null
+
         @SerializedName("user_name")
         @Expose
         var userName: String? = null
@@ -50,6 +54,16 @@ class PostModel {
         @Expose
         var platformName: String? = null
 
+        @SerializedName("instruction_msg")
+        @Expose
+        var instructionMsg: String? = null
+
+
+        @SerializedName("helper_count")
+        @Expose
+        var helperCount: String? = null
+
+
         @SerializedName("platform_info")
         @Expose
         var platformInfo: String? = null
@@ -64,7 +78,11 @@ class PostModel {
 
         @SerializedName("point")
         @Expose
-        var point: Int? = null
+        var point: String? = null
+
+        @SerializedName("helper_user")
+        @Expose
+        var helperUser: String? = null
 
         @SerializedName("url")
         @Expose
@@ -73,5 +91,9 @@ class PostModel {
         @SerializedName("keyword")
         @Expose
         var keyword: String? = null
+
+        @SerializedName("title")
+        @Expose
+        var title: String? = null
     }
 }

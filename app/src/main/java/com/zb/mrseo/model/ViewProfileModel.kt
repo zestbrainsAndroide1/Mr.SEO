@@ -13,6 +13,10 @@ class ViewProfileModel {
     @Expose
     var message: String? = null
 
+    @SerializedName("coin")
+    @Expose
+    var coin: String? = null
+
     @SerializedName("data")
     @Expose
     var data: Data? = null
@@ -28,7 +32,7 @@ class ViewProfileModel {
 
         @SerializedName("nick_name")
         @Expose
-        var nickName: Any? = null
+        var nickName: String? = null
 
         @SerializedName("country_code")
         @Expose
@@ -36,11 +40,7 @@ class ViewProfileModel {
 
         @SerializedName("mobile")
         @Expose
-        var mobile: Any? = null
-
-        @SerializedName("profile_image")
-        @Expose
-        var profileImage: String? = null
+        var mobile: String? = null
 
         @SerializedName("email")
         @Expose
@@ -56,7 +56,7 @@ class ViewProfileModel {
 
         @SerializedName("bank_name")
         @Expose
-        var bankName: Any? = null
+        var bankName: String? = null
 
         @SerializedName("bank_image")
         @Expose
@@ -70,22 +70,6 @@ class ViewProfileModel {
         @Expose
         var info: String? = null
 
-        @SerializedName("reset_token")
-        @Expose
-        var resetToken: Any? = null
-
-        @SerializedName("created_at")
-        @Expose
-        var createdAt: String? = null
-
-        @SerializedName("updated_at")
-        @Expose
-        var updatedAt: String? = null
-
-        @SerializedName("deleted_at")
-        @Expose
-        var deletedAt: Any? = null
-
         @SerializedName("is_notify")
         @Expose
         var isNotify: String? = null
@@ -94,8 +78,60 @@ class ViewProfileModel {
         @Expose
         var coin: String? = null
 
+        @SerializedName("mall_link")
+        @Expose
+        var mallLink: String? = null
+
+        @SerializedName("mall_category")
+        @Expose
+        var mallCategory: String? = null
+
+        @SerializedName("mall_subcategory")
+        @Expose
+        var mallSubcategory: String? = null
+
+        @SerializedName("set_image")
+        @Expose
+        var setImage: String? = null
+
         @SerializedName("token")
         @Expose
         var token: String? = null
+
+        @SerializedName("category")
+        @Expose
+        var category: ArrayList<Category>? = null
+
+        class Category {
+            @SerializedName("id")
+            @Expose
+            var id: String? = null
+
+            @SerializedName("parent_id")
+            @Expose
+            var parentId: String? = null
+
+            @SerializedName("name")
+            @Expose
+            var name: String? = null
+
+            @SerializedName("sub_category")
+            @Expose
+            var subCategory: ArrayList<SubCategory>? = null
+
+            class SubCategory {
+                @SerializedName("id")
+                @Expose
+                var id: String? = null
+
+                @SerializedName("parent_id")
+                @Expose
+                var parentId: String? = null
+
+                @SerializedName("name")
+                @Expose
+                var name: String? = null
+            }
+        }
     }
 }

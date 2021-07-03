@@ -37,9 +37,6 @@ class ContentListAdapter(
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
-
-
-
         var tvCategoryName: TextView = itemView.findViewById(R.id.tv_category_name)
         var tvKeyword: TextView = itemView.findViewById(R.id.tv_content_title)
         var tvKeywordTitle: TextView = itemView.findViewById(R.id.tv_content_keyword)
@@ -50,9 +47,6 @@ class ContentListAdapter(
         var llTop: LinearLayout = itemView.findViewById(R.id.ll_top)
         var llKeyword: LinearLayout = itemView.findViewById(R.id.ll_keyword)
         var cvHome: CardView = itemView.findViewById(R.id.cv_home)
-
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -69,7 +63,23 @@ class ContentListAdapter(
 
         holder.tvCategoryName.text = mModel[listPosition].title.toString()
         holder.tvTotalPoints.text = mModel[listPosition].registerPoint.toString()
-        holder.tvRemainingPoints.text = mModel[listPosition].helperCount.toString()
+/*
+        holder.tvRemainingPoints.text = mModel[listPosition].registerPoint!!.minus(mModel[listPosition].helperCount!!).toString()
+*/
+
+
+/*
+        holder.tvRemainingPoints.text = mModel[listPosition].registerPoint!!.minus(mModel[listPosition].helperCount!!).toString()+"/"
+*/
+try{
+    var point=mModel[listPosition].helperCount!!.toInt() - mModel[listPosition].helperUser!!.toInt()
+    holder.tvRemainingPoints.text = point.toString()
+
+}catch (e:Exception){
+
+}
+
+
         holder.tvTitle.text = mModel[listPosition].name.toString()
 
         if(mModel[listPosition].keyword.toString().equals("")){
@@ -107,9 +117,9 @@ class ContentListAdapter(
         }
 
         holder.cvHome.setOnClickListener(View.OnClickListener {
-
             val intent = Intent(mActivity, HelpActivity::class.java)
-            intent.putExtra("id",mModel[listPosition].postId.toString())
+            intent.putExtra("id", mModel[listPosition].postId.toString())
+            intent.putExtra("category", mModel[listPosition].categoryId.toString())
             (mActivity as Activity).startActivity(intent)
             (mActivity as Activity).overridePendingTransition(
                 R.anim.slide_in_right,

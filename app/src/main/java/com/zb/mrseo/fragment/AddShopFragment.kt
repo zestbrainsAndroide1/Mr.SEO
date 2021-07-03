@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
+import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.ImageView
@@ -38,8 +40,8 @@ class AddShopFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
     var mUserModel: LoginModel.Data? = null
     lateinit var dialog: Dialog
     lateinit var platformAdapter: PlatformAdapter
-
-
+    var coin =""
+    var point=""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,27 +56,59 @@ class AddShopFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
         val bundle = this.arguments
         if (bundle != null) {
             categoryId = bundle.getString("id").toString()
+            point = bundle.getString("point").toString()
+            coin = bundle.getString("coin").toString()
         }
-
         setUi()
     }
 
     private fun setUi() {
 
-        mUserModel = Prefs.getObject(
-            activity!!,
-            AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
-        ) as LoginModel.Data
+        mUserModel = Prefs.getObject(activity!!, AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java) as LoginModel.Data
 
-        tv_total_points_shop2.text = mUserModel!!.coin.toString()
-        if(mUserModel!!.coin.toString().equals("0")){
-            edtPointShop.isEnabled=false
-            tv_note_shop2.visible()
-            ShowToast("Oops, You don't have sufficient coin",requireActivity())
-        }else{
-            edtPointShop.filters = arrayOf<InputFilter>(InputFilterMinMax("1",  mUserModel!!.coin.toString()))
+        edtHelpersShop.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+            ) {
+            }
 
-        }
+            override fun onTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+            ) {
+                try{
+                    var helper= edtHelpersShop.text.toString()
+                    var total = helper.toInt()*point.toInt()
+
+                    Log.d("mUserModel!!.coin!! : ", coin)
+
+                    edtPointShop.setText(total.toString())
+                    if(total > coin.toInt()){
+                        edtPointShop.isEnabled=false
+                        tv_note_shop2.visible()
+                        ShowToast("Oops, You don't have sufficient coin",requireActivity())
+                    }else{
+                        tv_note_shop2.gone()
+                    }
+                }catch(e:Exception){
+
+                }
+
+
+
+            }
+
+            override fun afterTextChanged(s: Editable) {
+
+
+            }
+        })
+
         platformDialog()
 
         edtPlatFormShop.setSafeOnClickListener {
@@ -128,6 +162,7 @@ class AddShopFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
 
 
             } else {
+                mUserModel!!.coin = coin
                 addShop()
             }
         }
@@ -136,9 +171,10 @@ class AddShopFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
 
 
     private fun addShop() {
+        Log.d("model : ", mUserModel!!.coin.toString())
+        Log.d("register : ", registerPoint)
 
         if (isNetworkAvailable(activity!!)) {
-
             ApiRequest<Any>(
                 activity = activity!!,
                 objectType = ApiInitialize.initialize()
@@ -148,14 +184,13 @@ class AddShopFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
                         categoryId,
                         shoppingMallName,
                         description,
-                        registerPoint,
+                        (registerPoint.toInt() / point.toInt()).toString(),
                         keyword
                     ),
                 TYPE = WebConstant.ADD_SHOP,
                 isShowProgressDialog = true,
                 apiResponseInterface = this@AddShopFragment
             )
-
 
         } else {
             SnackBar.show(
@@ -197,25 +232,22 @@ class AddShopFragment : Fragment(), ApiResponseInterface, OnPlatformClick {
 
                 when (response.status) {
                     200 -> {
-
                         ShowToast(response.message!!, activity!!)
                         val someFragment: Fragment = AddContentFragment()
-
                         val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
                         transaction.replace(R.id.frmContainer, someFragment)
                         transaction.addToBackStack(null) // if written, this transaction will be added to backstack
                         transaction.commit()
-
                     }
-                    else -> ShowToast(response.message!!, activity!!)
+                    else -> {
+                        ShowToast(response.message!!, activity!!)
+                    }
                 }
             }
-
         }
     }
 
     private fun platformDialog() {
-
         dialog = Dialog(activity!!)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.getWindow()!!.setBackgroundDrawableResource(android.R.color.transparent)

@@ -96,7 +96,7 @@ class LoginModel {
 
         @SerializedName("coin")
         @Expose
-        var coin: Any? = null
+        var coin: String? = null
 
         @SerializedName("token")
         @Expose

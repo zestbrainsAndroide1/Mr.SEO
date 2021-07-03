@@ -1,7 +1,9 @@
 package com.zb.mrseo.fragment
 
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +30,8 @@ class AddBlogFragment : Fragment(), ApiResponseInterface {
     var description: String = ""
     var registerPoint: String = ""
     var mUserModel: LoginModel.Data? = null
-
+    var point=""
+    var coin = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,6 +45,8 @@ class AddBlogFragment : Fragment(), ApiResponseInterface {
         val bundle = this.arguments
         if (bundle != null) {
             categoryId = bundle.getString("id").toString()
+            point = bundle.getString("point").toString()
+            coin = bundle.getString("coin").toString()
         }
 
         setUi()
@@ -54,15 +59,47 @@ class AddBlogFragment : Fragment(), ApiResponseInterface {
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
 
-        tv_total_points_blog.text = mUserModel!!.coin.toString()
-        if(mUserModel!!.coin.toString().equals("0")){
-            edtPoint1.isEnabled=false
-            tv_note_blog.visible()
-            ShowToast("Oops, You don't have sufficient coin",requireActivity())
-        }else{
-            edtPoint1.filters = arrayOf<InputFilter>(InputFilterMinMax("1",  mUserModel!!.coin.toString()))
 
-        }
+
+        edtHelpersBlog.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+            ) {
+                try{
+                    var helper=edtHelpersBlog.text.toString()
+                    var total= helper.toInt()*point.toInt()
+                    edtPoint1.setText(total.toString())
+                    if(total > coin.toInt()){
+                        edtPoint1.isEnabled=false
+                        tv_note_blog.visible()
+                        ShowToast("Oops, You don't have sufficient coin",requireActivity())
+                    }else{
+                        tv_note_blog.gone()
+                    }
+                }catch(e:Exception){
+
+                }
+            }
+
+            override fun afterTextChanged(s: Editable) {
+
+
+            }
+        })
+
+
+
 
         try {
             KeyboardUtils.addKeyboardToggleListener(activity!!, object :
@@ -85,7 +122,7 @@ class AddBlogFragment : Fragment(), ApiResponseInterface {
             blogName = edtBlogName.text.toString()
             description = edtDesc1.text.toString()
             keyword = edtKeyword.text.toString()
-            registerPoint = edtPoint1.text.toString()
+            registerPoint = edtHelpersBlog.text.toString()
 
             if (blogName.equals("")) {
                 showToast(getString(R.string.blog_validation1), activity!!)
@@ -102,7 +139,7 @@ class AddBlogFragment : Fragment(), ApiResponseInterface {
 
             } else if (registerPoint.equals("")) {
 
-                showToast(getString(R.string.point_validation), activity!!)
+                showToast(getString(R.string.helper_validation), activity!!)
 
 
             } else {
@@ -112,11 +149,8 @@ class AddBlogFragment : Fragment(), ApiResponseInterface {
 
     }
 
-
     private fun addBlog() {
-
         if (isNetworkAvailable(activity!!)) {
-
             ApiRequest<Any>(
                 activity = activity!!,
                 objectType = ApiInitialize.initialize()
@@ -132,8 +166,6 @@ class AddBlogFragment : Fragment(), ApiResponseInterface {
                 isShowProgressDialog = true,
                 apiResponseInterface = this@AddBlogFragment
             )
-
-
         } else {
             SnackBar.show(
                 activity!!,
@@ -150,21 +182,17 @@ class AddBlogFragment : Fragment(), ApiResponseInterface {
     override fun getApiResponse(apiResponseManager: ApiResponseManager<*>) {
         when (apiResponseManager.type) {
 
-
             WebConstant.ADD_BLOG -> {
                 val response = apiResponseManager.response as AddBlogModel
 
                 when (response.status) {
                     200 -> {
-
                         ShowToast(response.message!!, activity!!)
                         val someFragment: Fragment = AddContentFragment()
-
                         val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
                         transaction.replace(R.id.frmContainer, someFragment)
                         transaction.addToBackStack(null) // if written, this transaction will be added to backstack
                         transaction.commit()
-
                     }
                     else -> ShowToast(response.message!!, activity!!)
                 }

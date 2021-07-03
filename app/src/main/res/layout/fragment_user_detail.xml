@@ -6,11 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.UserDetailFragment">
 
-    <TextView
+    <ImageView
         android:id="@+id/tv_title_seo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/logo2"
         android:fontFamily="@font/noto_regular"
         android:text="@string/title"
         android:textColor="@color/app_color"
@@ -89,8 +90,6 @@ app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_regular"
-                android:text="
-Eduard Franz"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -136,6 +135,7 @@ Eduard Franz"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_marginEnd="16dp">
+
             <TextView
                 android:id="@+id/tv_total_coins_user"
                 android:layout_width="match_parent"
@@ -144,9 +144,8 @@ Eduard Franz"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/noto_semi_bold"
                 android:gravity="center_horizontal"
-                android:text="1500 Coins"
-                android:textColor="@color/white"
                 android:includeFontPadding="false"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size_24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

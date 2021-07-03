@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
@@ -16,6 +15,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,37 +24,61 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.zb.mindme.permission.PermissionChecker
 import com.zb.mindme.permission.PermissionStatus
 import com.zb.moodlist.utility.*
-import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
-import com.zb.mrseo.adapter.BankListAdapter
-import com.zb.mrseo.adapter.PlatformAdapter
+import com.zb.mrseo.adapter.*
+import com.zb.mrseo.interfaces.OnCategoryClick
 import com.zb.mrseo.interfaces.OnPlatformClick
 import com.zb.mrseo.model.*
 import com.zb.mrseo.restapi.*
 import kotlinx.android.synthetic.main.activity_forgot_pwd.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
-import kotlinx.android.synthetic.main.activity_sign_up.ccp_login_country
 import kotlinx.android.synthetic.main.activity_sign_up.edtAccNo
 import kotlinx.android.synthetic.main.dialog_terms.*
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.sufficientlysecure.htmltextview.HtmlTextView
 import java.io.File
+import java.util.*
 import java.util.regex.Pattern
 
 class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterface,
-    OnPlatformClick {
+    OnPlatformClick, OnCategoryClick {
     lateinit var dialog: Dialog
     lateinit var dialog1: Dialog
 
     lateinit var bankListAdapter: BankListAdapter
+    lateinit var categoryAdapter: CategoryAdapter
+    lateinit var dialogCategory: Dialog
+    lateinit var dialogSubCategory: Dialog
+    var position = ""
+    var position1 = ""
+    var position2 = ""
+
+
+    var categoryList: ArrayList<CategoryListModel.Data.Category>? =
+        ArrayList<CategoryListModel.Data.Category>()
+
+    var categoryIdList: java.util.ArrayList<String>? =
+        java.util.ArrayList<String>()
+
+    var subCatgoryIdList: java.util.ArrayList<String>? =
+        java.util.ArrayList<String>()
+
+
+    var mallCategory=""
+    var url=""
+    var mallSubCategory=""
+
+
 
     private var profilePath: String = ""
+    lateinit var subCategoryAdapter: SubCategory1Adapter
+    lateinit var subCategoryAdapter1: SubCategoryAdapter1
+    lateinit var subCategoryAdapter2: SubCategoryAdapter2
+
+    lateinit var dialogSubCategory1: Dialog
+    lateinit var dialogSubCategory2: Dialog
+
 
     private var email: String = ""
     private var password: String = ""
@@ -73,6 +97,7 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
     private var isProfile: String = ""
 
     private var bankImagePath: String = ""
+    var type=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +117,8 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
         }
         bankDialog()
         termsDialog()
+        dialogCategory()
+        getCategoryList()
 /*
         tvCountry.text = getCountryCode()
 */
@@ -100,11 +127,16 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
             password = edt_password.text.toString()
             name = edtName.text.toString()
             nickName = edtNickName.text.toString()
-            mobile = edtPhone.text.toString()
+            mobile = edtPhone.text.toString().substring(1)
             bankName = edtBankName.text.toString()
             accNo = edtAccNo.text.toString()
             confirmPassword = edtConfirmPassword.text.toString()
+            val commaSeperatedString = categoryIdList!!.joinToString(separator = ",") { it -> "\'${it}\'" }
+            mallCategory = commaSeperatedString.replace("'", "")
 
+            val commaSeperatedString1 = subCatgoryIdList!!.joinToString(separator = ",") { it -> "\'${it}\'" }
+            mallSubCategory = commaSeperatedString1.replace("'", "")
+url=edtWebsiteName.text.toString()
             if (!isValidEmail1(email)) {
                 showToast(getString(R.string.email_validation1), this@SignUpActivity)
 
@@ -146,6 +178,24 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
             } else if (!isValidPassword(password)) {
                 showToast(getString(R.string.pwd_validation), this@SignUpActivity)
 
+            }else if (edtWebsiteName.text.toString().equals("")) {
+
+                showToast(getString(R.string.mall_link_validation), this@SignUpActivity)
+
+
+            }else if (bankImagePath.toString().equals("")) {
+
+                showToast(getString(R.string.img_validation), this@SignUpActivity)
+
+
+            }else if (mallCategory.toString().equals("")) {
+
+                showToast(getString(R.string.category_validation), this@SignUpActivity)
+
+
+            } else if (mallSubCategory.toString().equals("")) {
+                showToast(getString(R.string.sub_category_validation), this@SignUpActivity)
+
             } else {
                 /* signUp()*/
                 sendOtp()
@@ -156,6 +206,75 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
         }
         edtBankName.setSafeOnClickListener {
             dialog1.show()
+        }
+        edt_category.setSafeOnClickListener {
+            type="category1"
+            dialogCategory.show()
+        }
+        edt_category1.setSafeOnClickListener {
+            type="category2"
+
+            dialogCategory.show()
+        }
+        edt_category2.setSafeOnClickListener {
+            type="category3"
+
+            dialogCategory.show()
+        }
+        edt_sub_category.setSafeOnClickListener {
+            type = "category1"
+
+
+            if (type.equals("category1")) {
+                if (!position.equals("")) {
+                    if (categoryList!!.get(position.toInt()).subCategory!!.size > 0) {
+
+                        dialogSubCategory(categoryList!!.get(position.toInt()).subCategory!!, "")
+
+                    }
+                }else {
+                    dialogSubCategory.show()
+
+                }
+            }
+
+
+        }
+        edt_sub_category1.setSafeOnClickListener {
+            type = "category2"
+            if (type.equals("category2")) {
+
+                if (!position1.equals("")) {
+                    if (categoryList!!.get(position1.toInt()).subCategory!!.size > 0) {
+                        dialogSubCategory1(categoryList!!.get(position1.toInt()).subCategory!!, "")
+
+                    }
+                }else {
+                    dialogSubCategory1.show()
+
+                }
+
+
+            }
+        }
+        edt_sub_category2.setSafeOnClickListener {
+            type = "category3"
+
+
+
+            if (!position2.equals("")) {
+                if (categoryList!!.get(position2.toInt()).subCategory!!.size > 0) {
+                    /*subCategoryAdapter1.addAll(categoryList!!.get(position1.toInt()).subCategory!!)
+                    subCategoryAdapter1.notifyDataSetChanged()*/
+                    dialogSubCategory2(categoryList!!.get(position2.toInt()).subCategory!!, "")
+
+                }
+            }else{
+                dialogSubCategory2.show()
+
+            }
+
+
         }
 
         cl_bank_img_sign_up.setOnClickListener(View.OnClickListener {
@@ -221,7 +340,6 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
 
     override fun allGranted() {
         ImagePicker.with(this@SignUpActivity)
-            .crop(16f, 16f)
             .compress(1024)
             //Final image size will be less than 1 MB(Optional)
             .start()
@@ -294,7 +412,10 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
                                 bankName,
                                 accNo,
                                 response.data!!.otp.toString(),
-                                bankImagePath
+                                bankImagePath,
+                                url,
+                                mallCategory,
+                                mallSubCategory
                             )
                         )
                         startActivity(intent)
@@ -324,6 +445,7 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
                     else -> ShowToast(response.message!!, this@SignUpActivity)
                 }
             }
+
             WebConstant.GET_TERMS -> {
                 val response = apiResponseManager.response as TermsModel
 
@@ -338,9 +460,31 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
                 }
             }
 
+            WebConstant.GET_CATEGORY_LIST -> {
+                val response = apiResponseManager.response as CategoryListModel
+
+                when (response.status) {
+                    200 -> {
+                        categoryList!!.clear()
+                        categoryAdapter.clear()
+                        if (response.data!!.category!!.size > 0) {
+                            categoryAdapter.addAll(response.data!!.category!!)
+                            categoryList!!.addAll(response.data!!.category!!)
+
+                        } else {
+
+                        }
+
+
+                    }
+                    else -> ShowToast(response.message!!, this@SignUpActivity)
+                }
+            }
+
 
         }
     }
+
 
     // validating Number
     private fun isValidNumber(number: String?): Boolean {
@@ -348,8 +492,6 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
             true
         } else false
     }
-
-
 
     private fun sendOtp() {
         if (isNetworkAvailable(this@SignUpActivity)) {
@@ -472,5 +614,394 @@ class SignUpActivity : AppCompatActivity(), PermissionStatus, ApiResponseInterfa
             )
         }
     }
+
+    private fun getCategoryList() {
+        if (isNetworkAvailable(this@SignUpActivity)) {
+
+            ApiRequest<Any>(
+                activity = this@SignUpActivity,
+                objectType = ApiInitialize.initialize()
+                    .getCategoryList(),
+                TYPE = WebConstant.GET_CATEGORY_LIST,
+                isShowProgressDialog = false,
+                apiResponseInterface = this@SignUpActivity
+            )
+
+        } else {
+            SnackBar.show(
+                this@SignUpActivity,
+                true,
+                getStr(this@SignUpActivity, R.string.str_network_error),
+                false,
+                "OK",
+                null
+            )
+        }
+    }
+
+    private fun dialogCategory() {
+        dialogCategory = Dialog(this@SignUpActivity)
+        dialogCategory.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogCategory.setCancelable(true)
+        dialogCategory.setContentView(R.layout.dialog_platform)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialogCategory.window!!.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.gravity = Gravity.CENTER
+        dialogCategory.window!!.attributes = lp
+        val imgClose = dialogCategory.findViewById(R.id.img_close) as ImageView
+        val tvTitle = dialogCategory.findViewById(R.id.tv_title) as TextView
+
+tvTitle.text="카테고리 선택"
+
+
+        imgClose.setSafeOnClickListener {
+            dialogCategory.dismiss()
+        }
+        val dialogRV = dialogCategory.findViewById(R.id.rvPlatform) as RecyclerView
+
+        categoryAdapter = CategoryAdapter(this@SignUpActivity, this)
+        val linearLayoutManager1 =
+            LinearLayoutManager(
+                this@SignUpActivity,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        dialogRV.layoutManager = linearLayoutManager1
+        dialogRV.adapter = categoryAdapter
+
+
+    }
+
+
+
+
+
+
+    private fun dialogSubCategory(
+        data: ArrayList<CategoryListModel.Data.Category.SubCategory>,
+        status: String
+    ) {
+        dialogSubCategory = Dialog(this)
+        dialogSubCategory.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogSubCategory.setCancelable(true)
+        dialogSubCategory.setContentView(R.layout.dialog_platform)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialogSubCategory.window!!.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.gravity = Gravity.CENTER
+        dialogSubCategory.window!!.attributes = lp
+        val imgClose = dialogSubCategory.findViewById(R.id.img_close) as ImageView
+
+        val tvTitle = dialogCategory.findViewById(R.id.tv_title) as TextView
+
+        tvTitle.text = "하위 카테고리 선택"
+
+        imgClose.setSafeOnClickListener {
+            dialogSubCategory.dismiss()
+        }
+        val dialogRV = dialogSubCategory.findViewById(R.id.rvPlatform) as RecyclerView
+
+        subCategoryAdapter = SubCategory1Adapter(this, data, this)
+        val linearLayoutManager1 =
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        dialogRV.layoutManager = linearLayoutManager1
+        dialogRV.adapter = subCategoryAdapter
+
+
+        if (status.equals("")) {
+            dialogSubCategory.show()
+
+        } else {
+
+        }
+    }
+
+
+    private fun dialogSubCategory1(
+        data: ArrayList<CategoryListModel.Data.Category.SubCategory>,
+        status: String
+    ) {
+        dialogSubCategory1 = Dialog(this)
+        dialogSubCategory1.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogSubCategory1.setCancelable(true)
+        dialogSubCategory1.setContentView(R.layout.dialog_platform)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialogSubCategory1.window!!.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.gravity = Gravity.CENTER
+        dialogSubCategory1.window!!.attributes = lp
+        val imgClose = dialogSubCategory1.findViewById(R.id.img_close) as ImageView
+
+        val tvTitle = dialogSubCategory1.findViewById(R.id.tv_title) as TextView
+
+        tvTitle.text = "하위 카테고리 선택"
+
+        imgClose.setSafeOnClickListener {
+            dialogSubCategory1.dismiss()
+        }
+        val dialogRV = dialogSubCategory1.findViewById(R.id.rvPlatform) as RecyclerView
+
+
+        subCategoryAdapter1 = SubCategoryAdapter1(this, data, this)
+        val linearLayoutManager1 =
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        dialogRV.layoutManager = linearLayoutManager1
+        dialogRV.adapter = subCategoryAdapter1
+
+
+
+        if (status.equals("")) {
+            dialogSubCategory1.show()
+
+        } else {
+
+        }
+    }
+
+
+    private fun dialogSubCategory2(
+        data: ArrayList<CategoryListModel.Data.Category.SubCategory>,
+        status: String
+    ) {
+        dialogSubCategory2 = Dialog(this)
+        dialogSubCategory2.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogSubCategory2.setCancelable(true)
+        dialogSubCategory2.setContentView(R.layout.dialog_platform)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialogSubCategory2.window!!.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.gravity = Gravity.CENTER
+        dialogSubCategory2.window!!.attributes = lp
+        val imgClose = dialogSubCategory2.findViewById(R.id.img_close) as ImageView
+
+        val tvTitle = dialogSubCategory2.findViewById(R.id.tv_title) as TextView
+
+        tvTitle.text = "하위 카테고리 선택"
+
+        imgClose.setSafeOnClickListener {
+            dialogSubCategory2.dismiss()
+        }
+        val dialogRV = dialogSubCategory2.findViewById(R.id.rvPlatform) as RecyclerView
+
+
+        subCategoryAdapter2 = SubCategoryAdapter2(this, data, this)
+        val linearLayoutManager1 =
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        dialogRV.layoutManager = linearLayoutManager1
+        dialogRV.adapter = subCategoryAdapter2
+
+
+
+        if (status.equals("")) {
+            dialogSubCategory2.show()
+
+        } else {
+
+        }
+    }
+
+
+    override fun onCategoryClick(listPosition: Int, name: String, id: String) {
+
+
+        if (type.equals("category1")) {
+            edt_sub_category.isEnabled=true
+            position=listPosition.toString()
+try{
+    if(!edt_category.text.toString().equals(name) && !edt_category.text.toString().equals("")){
+        categoryIdList!!.set(0,id)
+        try{
+            if(subCatgoryIdList?.size==1){
+                subCatgoryIdList!!.removeAt(0)
+
+            }else if(subCatgoryIdList?.size==2){
+                subCatgoryIdList!!.removeAt(1)
+
+            }else if(subCatgoryIdList?.size==3){
+                subCatgoryIdList!!.removeAt(2)
+
+            }else{
+
+            }
+
+        }catch (e:java.lang.Exception){
+
+        }
+        edt_sub_category.text?.clear()
+
+    }else if(edt_category.text.toString().equals(name)){
+
+    }else{
+        categoryIdList!!.add(id)
+
+
+    }
+
+
+}catch (e:Exception){
+
+}
+
+            if (listPosition.equals("")) {
+                dialogSubCategory(categoryList!!.get(position.toInt()).subCategory!!, "")
+
+            } else {
+                position = ""
+
+                if (categoryList!!.get(listPosition).subCategory!!.size > 0) {
+                    dialogSubCategory(categoryList!!.get(listPosition).subCategory!!, "true")
+                } else {
+                }
+            }
+
+            edt_category.setText(name)
+        } else if (type.equals("category2")) {
+            edt_sub_category1.isEnabled=true
+
+            position1=listPosition.toString()
+
+            try{
+                if(!edt_category1.text.toString().equals(name) && !edt_category1.text.toString().equals("")){
+                    categoryIdList!!.set(1,id)
+                    try{
+                        if(subCatgoryIdList?.size==1){
+                            subCatgoryIdList!!.removeAt(0)
+
+                        }else if(subCatgoryIdList?.size==2){
+                            subCatgoryIdList!!.removeAt(1)
+
+                        }else if(subCatgoryIdList?.size==3){
+                            subCatgoryIdList!!.removeAt(2)
+
+                        }else{
+
+                        }
+
+                    }catch (e:java.lang.Exception){
+
+                    }
+                    edt_sub_category1.text?.clear()
+
+                }else if(edt_category1.text.toString().equals(name)){
+
+                }else{
+                    categoryIdList!!.add(id)
+
+
+                }
+            }catch (e:java.lang.Exception){
+
+            }
+
+
+
+            if (listPosition.equals("")) {
+
+
+                dialogSubCategory1(categoryList!!.get(position1.toInt()).subCategory!!, "")
+            } else {
+                position1 = ""
+                dialogSubCategory1(categoryList!!.get(listPosition).subCategory!!, "true")
+
+            }
+
+            edt_category1.setText(name)
+
+        } else if (type.equals("category3")) {
+            edt_sub_category2.isEnabled=true
+
+            position2=listPosition.toString()
+
+            try {
+                if(!edt_category2.text.toString().equals(name) && !edt_category2.text.toString().equals("")){
+                    categoryIdList!!.set(2,id)
+                    try{
+                        if(subCatgoryIdList?.size==1){
+                            subCatgoryIdList!!.removeAt(0)
+
+                        }else if(subCatgoryIdList?.size==2){
+                            subCatgoryIdList!!.removeAt(1)
+
+                        }else if(subCatgoryIdList?.size==3){
+                            subCatgoryIdList!!.removeAt(2)
+
+                        }else{
+
+                        }
+
+                    }catch (e:java.lang.Exception){
+
+                    }
+                    edt_sub_category2.text?.clear()
+
+                }else if(edt_category2.text.toString().equals(name)){
+
+                }else{
+                    categoryIdList!!.add(id)
+
+
+                }
+            }catch (e:java.lang.Exception){
+
+            }
+
+            if (listPosition.equals("")) {
+                dialogSubCategory2(categoryList!!.get(position2.toInt()).subCategory!!, "")
+
+            } else {
+                position2 = ""
+                dialogSubCategory2(categoryList!!.get(listPosition).subCategory!!, "true")
+
+            }
+            edt_category2.setText(name)
+
+        } else {
+
+        }
+        dialogCategory.dismiss()
+    }
+
+    override fun onSubCategoryClick(listPosition: Int, name: String, id: String) {
+
+        subCatgoryIdList!!.add(0,id)
+
+        edt_sub_category.setText(name)
+
+        dialogSubCategory.dismiss()
+    }
+
+    override fun onSubCategoryClick1(listPosition: Int, name: String, id: String) {
+        subCatgoryIdList!!.add(1,id)
+
+        edt_sub_category1.setText(name)
+        dialogSubCategory1.dismiss()
+
+    }
+
+    override fun onSubCategoryClick2(listPosition: Int, name: String, id: String) {
+        subCatgoryIdList!!.add(2,id)
+
+        edt_sub_category2.setText(name)
+        dialogSubCategory2.dismiss()
+
+    }
+
 
 }

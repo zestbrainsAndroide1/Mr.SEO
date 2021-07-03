@@ -7,6 +7,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,8 +40,6 @@ class HelperAdapter(
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
-
-
         var tvCategoryName: TextView = itemView.findViewById(R.id.tv_category_name)
         var tvKeyword: TextView = itemView.findViewById(R.id.tv_content_title)
         var tvKeywordTitle: TextView = itemView.findViewById(R.id.tv_content_keyword)
@@ -51,8 +50,6 @@ class HelperAdapter(
         var llKeyword: LinearLayout = itemView.findViewById(R.id.ll_keyword)
         var llChat: LinearLayout = itemView.findViewById(R.id.ll_chat)
         var cvHelp: CardView = itemView.findViewById(R.id.cv_home)
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -67,11 +64,16 @@ class HelperAdapter(
         @SuppressLint("RecyclerView") listPosition: Int
     ) {
 
+        Log.d("help id : ", mModel[listPosition].helpId.toString())
 
-
+        when(mModel[listPosition].status.toString()){
+            "finished" -> holder.tvStatus.text = "최종완료"
+            "cash_sent" -> holder.tvStatus.text = "송금완료"
+            "request_completed" -> holder.tvStatus.text = "요청완료"
+            else -> {holder.tvStatus.text = "증빙완료"}
+        }
 
         holder.tvCategoryName.text = mModel[listPosition].title.toString()
-        holder.tvStatus.text = mModel[listPosition].status.toString()
         holder.tvTitle.text = mModel[listPosition].name.toString()
 
         if (mModel[listPosition].keyword.toString().equals("")) {

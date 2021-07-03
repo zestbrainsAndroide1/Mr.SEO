@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zb.moodlist.utility.*
 import com.zb.mrseo.MainActivity
@@ -52,6 +53,10 @@ class ChatHistoryActivity : AppCompatActivity(),ApiResponseInterface {
             receiverId = extras.getString("receiverId").toString()
             type= extras.getString("type", "")
 
+            Log.d("threadId : ", threadId.toString())
+            Log.d("title : ", title.toString())
+            Log.d("receiverId : ", receiverId.toString())
+            Log.d("type : ", type.toString())
 
         }
 
@@ -60,7 +65,13 @@ class ChatHistoryActivity : AppCompatActivity(),ApiResponseInterface {
         }
 
         img_send.setSafeOnClickListener {
-            sendMessage()
+            if(!edt_msg.text.toString().equals("")){
+                sendMessage()
+                edt_msg.text.clear()
+
+            }else{
+                showToast(getString(R.string.msg_validation),this@ChatHistoryActivity)
+            }
         }
 
 
@@ -223,32 +234,36 @@ class ChatHistoryActivity : AppCompatActivity(),ApiResponseInterface {
     }
 
     override fun onBackPressed() {
-        if(type.equals("details")){
-            val intent = Intent(this@ChatHistoryActivity, PostDetailActivity::class.java)
-            intent.putExtra("show","")
-            startActivity(intent)
-            overridePendingTransition(
-                R.anim.slide_in_right,
-                R.anim.slide_out_left
-            )
-            finish()
-        }else if(type.equals("help")){
-            onBackPressed()
-        }else if(type.equals("help_list")){
-            onBackPressed()
-
-        }else if(type.equals("helper_post")){
-            onBackPressed()
-        }else{
-            val intent = Intent(this@ChatHistoryActivity, MainActivity::class.java)
-            intent.putExtra("show","option")
-            startActivity(intent)
-            overridePendingTransition(
-                R.anim.slide_in_right,
-                R.anim.slide_out_left
-            )
-            finish()
-        }
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("chat", "채팅")
+        startActivity(intent)
+        finish()
+//        if(type.equals("details")){
+//            val intent = Intent(this@ChatHistoryActivity, PostDetailActivity::class.java)
+//            intent.putExtra("show","")
+//            startActivity(intent)
+//            overridePendingTransition(
+//                R.anim.slide_in_right,
+//                R.anim.slide_out_left
+//            )
+//            finish()
+//        }else if(type.equals("help")){
+//            onBackPressed()
+//        }else if(type.equals("help_list")){
+//            onBackPressed()
+//
+//        }else if(type.equals("helper_post")){
+//            onBackPressed()
+//        }else{
+//            val intent = Intent(this@ChatHistoryActivity, MainActivity::class.java)
+//            intent.putExtra("show","option")
+//            startActivity(intent)
+//            overridePendingTransition(
+//                R.anim.slide_in_right,
+//                R.anim.slide_out_left
+//            )
+//            finish()
+//        }
 
     }
 }

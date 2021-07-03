@@ -7,10 +7,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,31 +22,71 @@ import com.zb.moodlist.utility.*
 import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
 import com.zb.mrseo.activity.LoginActivity
-import com.zb.mrseo.adapter.BankListAdapter
+import com.zb.mrseo.adapter.*
+import com.zb.mrseo.interfaces.OnCategoryClick
 import com.zb.mrseo.interfaces.OnPlatformClick
 import com.zb.mrseo.model.*
 import com.zb.mrseo.restapi.*
 import com.zb.mrseo.utility.KeyboardUtils
+import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.fragment_edit_profile.edtAccNo
 import kotlinx.android.synthetic.main.fragment_profile.*
-import okhttp3.MediaType.Companion.get
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.util.*
 import java.util.regex.Pattern
+import kotlin.collections.ArrayList
 
 
-class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, PermissionStatus {
+class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, PermissionStatus,
+    OnCategoryClick {
 
     var mUserModel: LoginModel.Data? = null
     lateinit var dialog: Dialog
     lateinit var bankListAdapter: BankListAdapter
 
     private var profilePath: String = ""
+
+    lateinit var categoryAdapter: CategoryAdapter
+    lateinit var subCategoryAdapter: SubCategory1Adapter
+    lateinit var subCategoryAdapter1: SubCategoryAdapter1
+    lateinit var subCategoryAdapter2: SubCategoryAdapter2
+
+    lateinit var dialogCategory: Dialog
+    lateinit var dialogSubCategory: Dialog
+    lateinit var dialogSubCategory1: Dialog
+    lateinit var dialogSubCategory2: Dialog
+
+    var categoryList: ArrayList<CategoryListModel.Data.Category>? =
+        ArrayList<CategoryListModel.Data.Category>()
+
+    var categoryIdList: ArrayList<String>? =
+        java.util.ArrayList<String>()
+
+    var subCatgoryIdList: java.util.ArrayList<String>? =
+        java.util.ArrayList<String>()
+
+
+    var categoryNameList: ArrayList<String>? =
+        java.util.ArrayList<String>()
+
+    var subCatgoryNameList: java.util.ArrayList<String>? =
+        java.util.ArrayList<String>()
+
+    var type = ""
+
+    var mallCategory = ""
+    var url = ""
+    var mallSubCategory = ""
+
+    var position = ""
+    var position1 = ""
+    var position2 = ""
 
     private var email: String = ""
     private var password: String = ""
@@ -98,6 +138,8 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
         bankDialog()
+        dialogCategory()
+        getCategoryList()
         edt_bank_name_edit_profile.setSafeOnClickListener {
             dialog.show()
         }
@@ -118,6 +160,15 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
             bankName = edt_bank_name_edit_profile.text.toString()
             accNo = edtAccNo.text.toString()
 
+            val commaSeperatedString =
+                categoryIdList!!.joinToString(separator = ",") { it -> "\'${it}\'" }
+            mallCategory = commaSeperatedString.replace("'", "")
+
+            val commaSeperatedString1 =
+                subCatgoryIdList!!.joinToString(separator = ",") { it -> "\'${it}\'" }
+            mallSubCategory = commaSeperatedString1.replace("'", "")
+
+            url = edtWebsiteNameEdit.text.toString()
             if (!isValidEmail1(email)) {
                 showToast(getString(R.string.email_validation1), activity!!)
 
@@ -141,12 +192,25 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                 showToast(getString(R.string.bank_name_validation), activity!!)
 
 
+            } else if (edtWebsiteNameEdit.text.toString().equals("")) {
+
+                showToast(getString(R.string.mall_link_validation), activity!!)
+
+
+            } else if (mallCategory.toString().equals("")) {
+
+                showToast(getString(R.string.category_validation), activity!!)
+
+
+            } else if (mallSubCategory.toString().equals("")) {
+                showToast(getString(R.string.sub_category_validation), activity!!)
+
             } else if (!isValidNumber(mobile)) {
 
                 showToast(getString(R.string.mobile_validation), activity!!)
 
 
-            }  else {
+            } else {
                 editProfile()
             }
         }
@@ -161,6 +225,79 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
             transaction.addToBackStack(null) // if written, this transaction will be added to backstack
             transaction.commit()
         })
+
+        edt_category_edit.setSafeOnClickListener {
+            type = "category1"
+            dialogCategory.show()
+
+
+        }
+        edt_category1_edit.setSafeOnClickListener {
+            type = "category2"
+
+            dialogCategory.show()
+        }
+        edt_category2_edit.setSafeOnClickListener {
+            type = "category3"
+
+            dialogCategory.show()
+        }
+        edt_sub_category_edit.setSafeOnClickListener {
+            type = "category1"
+
+
+            if (type.equals("category1")) {
+                if (!position.equals("")) {
+                    if (categoryList!!.get(position.toInt()).subCategory!!.size > 0) {
+
+                        dialogSubCategory(categoryList!!.get(position.toInt()).subCategory!!, "")
+
+                    }
+                }else {
+                    dialogSubCategory.show()
+
+                }
+            }
+
+
+        }
+        edt_sub_category1_edit.setSafeOnClickListener {
+            type = "category2"
+            if (type.equals("category2")) {
+
+                if (!position1.equals("")) {
+                    if (categoryList!!.get(position1.toInt()).subCategory!!.size > 0) {
+                        dialogSubCategory1(categoryList!!.get(position1.toInt()).subCategory!!, "")
+
+                    }
+                }else {
+                    dialogSubCategory1.show()
+
+                }
+
+
+            }
+        }
+        edt_sub_category2_edit.setSafeOnClickListener {
+            type = "category3"
+
+
+
+            if (!position2.equals("")) {
+                if (categoryList!!.get(position2.toInt()).subCategory!!.size > 0) {
+                    /*subCategoryAdapter1.addAll(categoryList!!.get(position1.toInt()).subCategory!!)
+                    subCategoryAdapter1.notifyDataSetChanged()*/
+                    dialogSubCategory2(categoryList!!.get(position2.toInt()).subCategory!!, "")
+
+                }
+            }else{
+                dialogSubCategory2.show()
+
+            }
+
+
+        }
+
     }
 
     private fun editProfile() {
@@ -173,7 +310,7 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                 val name1 = name.toRequestBody("text/plain".toMediaTypeOrNull())
                 val nickName1 = nickName.toRequestBody("text/plain".toMediaTypeOrNull())
                 val countryCode1 =
-                   countryCode.toRequestBody("text/plain".toMediaTypeOrNull())
+                    countryCode.toRequestBody("text/plain".toMediaTypeOrNull())
                 val deviceId1 = deviceId.toRequestBody("text/plain".toMediaTypeOrNull())
                 val mobile1 = mobile.toRequestBody("text/plain".toMediaTypeOrNull())
 
@@ -182,6 +319,13 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                 val accNo1 = accNo.toRequestBody("text/plain".toMediaTypeOrNull())
                 val info1 = info.toRequestBody("text/plain".toMediaTypeOrNull())
                 val token1 = token.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                val mallCategory1 = mallCategory.toRequestBody("text/plain".toMediaTypeOrNull())
+                val mallSubCategory1 =
+                    mallSubCategory.toRequestBody("text/plain".toMediaTypeOrNull())
+                val mallUrl = edtWebsiteNameEdit.text.toString()
+                    .toRequestBody("text/plain".toMediaTypeOrNull())
+
 
                 val requestFile: RequestBody
                 var profileImage: MultipartBody.Part? = null
@@ -209,7 +353,10 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                             mobile1,
                             bankName1,
                             accNo1,
-                            profileImage
+                            profileImage,
+                            mallUrl,
+                            mallCategory1,
+                            mallSubCategory1
                         ),
                     TYPE = WebConstant.EDIT_PROFILE,
                     isShowProgressDialog = true,
@@ -231,6 +378,9 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                             mobile,
                             bankName,
                             accNo,
+                            edtWebsiteNameEdit.text.toString(),
+                            mallCategory,
+                            mallSubCategory
 
                             ),
                     TYPE = WebConstant.EDIT_PROFILE,
@@ -257,8 +407,6 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
         }
 
     }
-
-
 
 
     private fun getProfile() {
@@ -296,10 +444,15 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                 when (response.status) {
                     200 -> {
 
-                        edt_email_edit_profile.text = response.data!!.email.toString().toEditable()
+                        edt_email_edit_profile.text =
+                            response.data!!.email.toString().toEditable()
                         edtUserName.text = response.data!!.name.toString().toEditable()
+                        edtWebsiteNameEdit.text =
+                            response.data!!.mallLink.toString().toEditable()
+
                         edt_nick_name.text = response.data!!.nickName.toString().toEditable()
-                        edt_phone_edit_profile.text = response.data!!.mobile.toString().toEditable()
+                        edt_phone_edit_profile.text =
+                            response.data!!.mobile.toString().toEditable()
                         edt_bank_name_edit_profile.text =
                             response.data!!.bankName.toString().toEditable()
                         edtAccNo.text = response.data!!.accountNumber.toString().toEditable()
@@ -307,6 +460,129 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                         Glide.with(this@EditProfileFragment)
                             .load(response.data!!.bankImage.toString())
                             .into(img_bank_edit)
+
+                        mallCategory = response.data!!.mallCategory.toString()
+                        mallSubCategory = response.data!!.mallSubcategory.toString()
+
+
+                        val categoryList: List<String> =
+                            response.data!!.mallCategory!!.split(",")
+                        val subCategoryList: List<String> =
+                            response.data!!.mallSubcategory!!.split(",")
+
+                        categoryIdList!!.clear()
+                        for (i in 0 until categoryList.size) {
+                            categoryIdList!!.add(categoryList.get(i))
+
+                        }
+
+                        subCatgoryIdList!!.clear()
+                        for (i in 0 until categoryList.size) {
+                            subCatgoryIdList!!.add(subCategoryList.get(i))
+
+                        }
+                        for (i in 0 until response.data!!.category!!.size) {
+                            for (j in 0 until categoryIdList!!.size) {
+                                if (response.data!!.category!!.get(i).id!!.equals(
+                                        categoryIdList!!.get(
+                                            j
+                                        )
+                                    )
+                                ) {
+                                    categoryNameList!!.add(response.data!!.category!!.get(i).name!!)
+                                }
+
+                            }
+                        }
+
+
+                        for (i in 0 until response.data!!.category!!.size) {
+
+                            for (k in 0 until response.data!!.category!!.get(i).subCategory!!.size) {
+
+                                for (j in 0 until subCatgoryIdList!!.size) {
+                                    if (response.data!!.category!!.get(i).subCategory!!.get(k).id.equals(
+                                            subCatgoryIdList!!.get(j)
+                                        )
+                                    ) {
+                                        subCatgoryNameList!!.add(
+                                            response.data!!.category!!.get(
+                                                i
+                                            ).subCategory!!.get(k).name.toString()
+                                        )
+                                    }
+                                }
+
+                            }
+                        }
+                        if (categoryNameList?.size == 1) {
+                            edt_category_edit.setText(categoryNameList?.get(0).toString())
+                        } else if (categoryNameList?.size == 2) {
+                            edt_category_edit.setText(categoryNameList?.get(0).toString())
+                            edt_category1_edit.setText(categoryNameList?.get(1).toString())
+
+                        } else if (categoryNameList?.size == 3) {
+                            edt_category_edit.setText(categoryNameList?.get(0).toString())
+                            edt_category1_edit.setText(categoryNameList?.get(1).toString())
+                            edt_category2_edit.setText(categoryNameList?.get(2).toString())
+
+                        } else {
+
+                        }
+                        if (subCatgoryNameList?.size == 1) {
+                            edt_sub_category_edit.setText(subCatgoryNameList?.get(0).toString())
+                        } else if (subCatgoryNameList?.size == 2) {
+                            edt_sub_category_edit.setText(subCatgoryNameList?.get(0).toString())
+                            edt_sub_category1_edit.setText(
+                                subCatgoryNameList?.get(1).toString()
+                            )
+
+                        } else if (subCatgoryNameList?.size == 3) {
+                            edt_sub_category_edit.setText(subCatgoryNameList?.get(0).toString())
+                            edt_sub_category1_edit.setText(
+                                subCatgoryNameList?.get(1).toString()
+                            )
+                            edt_sub_category2_edit.setText(
+                                subCatgoryNameList?.get(2).toString()
+                            )
+
+                        } else {
+
+                        }
+
+                        try {
+                            for (i in 0 until response.data?.category!!.size) {
+                                if (edt_category_edit.text.toString()
+                                        .equals(response.data?.category!!.get(i).name)
+                                ) {
+                                    position = i.toString()
+                                }
+                            }
+                        } catch (e: Exception) {
+
+                        }
+                        try {
+                            for (i in 0 until response.data?.category!!.size) {
+                                if (edt_category1_edit.text.toString()
+                                        .equals(response.data?.category!!.get(i).name)
+                                ) {
+                                    position1 = i.toString()
+                                }
+                            }
+                        } catch (e: Exception) {
+
+                        }
+                        try {
+                            for (i in 0 until response.data?.category!!.size) {
+                                if (edt_category2_edit.text.toString()
+                                        .equals(response.data?.category!!.get(i).name)
+                                ) {
+                                    position2 = i.toString()
+                                }
+                            }
+                        } catch (e: Exception) {
+
+                        }
 
 
                     }
@@ -370,6 +646,27 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
                     else -> ShowToast(response.message!!, requireActivity())
                 }
             }
+
+            WebConstant.GET_CATEGORY_LIST -> {
+                val response = apiResponseManager.response as CategoryListModel
+
+                when (response.status) {
+                    200 -> {
+                        categoryList!!.clear()
+                        categoryAdapter.clear()
+                        if (response.data!!.category!!.size > 0) {
+                            categoryAdapter.addAll(response.data!!.category!!)
+                            categoryList!!.addAll(response.data!!.category!!)
+
+                        } else {
+
+                        }
+
+                    }
+                    else -> ShowToast(response.message!!, requireActivity())
+                }
+            }
+
 
         }
     }
@@ -444,7 +741,6 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
 
     override fun allGranted() {
         ImagePicker.with(this@EditProfileFragment)
-            .crop(16f, 16f)
             .compress(1024)
             //Final image size will be less than 1 MB(Optional)
             .start()
@@ -513,4 +809,377 @@ class EditProfileFragment : Fragment(), ApiResponseInterface, OnPlatformClick, P
             true
         } else false
     }
+
+    private fun getCategoryList() {
+        if (isNetworkAvailable(activity!!)) {
+
+            ApiRequest<Any>(
+                activity = activity!!,
+                objectType = ApiInitialize.initialize()
+                    .getCategoryList(),
+                TYPE = WebConstant.GET_CATEGORY_LIST,
+                isShowProgressDialog = false,
+                apiResponseInterface = this@EditProfileFragment
+            )
+
+        } else {
+            SnackBar.show(
+                activity!!,
+                true,
+                getStr(activity!!, R.string.str_network_error),
+                false,
+                "OK",
+                null
+            )
+        }
+    }
+
+    private fun dialogCategory() {
+        dialogCategory = Dialog(activity!!)
+        dialogCategory.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogCategory.setCancelable(true)
+        dialogCategory.setContentView(R.layout.dialog_platform)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialogCategory.window!!.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.gravity = Gravity.CENTER
+        dialogCategory.window!!.attributes = lp
+        val imgClose = dialogCategory.findViewById(R.id.img_close) as ImageView
+        val tvTitle = dialogCategory.findViewById(R.id.tv_title) as TextView
+
+        tvTitle.text = "카테고리 선택"
+
+        imgClose.setSafeOnClickListener {
+            dialogCategory.dismiss()
+        }
+        val dialogRV = dialogCategory.findViewById(R.id.rvPlatform) as RecyclerView
+
+        categoryAdapter = CategoryAdapter(activity!!, this)
+        val linearLayoutManager1 =
+            LinearLayoutManager(
+                activity!!,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        dialogRV.layoutManager = linearLayoutManager1
+        dialogRV.adapter = categoryAdapter
+
+
+    }
+
+    private fun dialogSubCategory(
+        data: ArrayList<CategoryListModel.Data.Category.SubCategory>,
+        status: String
+    ) {
+        dialogSubCategory = Dialog(activity!!)
+        dialogSubCategory.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogSubCategory.setCancelable(true)
+        dialogSubCategory.setContentView(R.layout.dialog_platform)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialogSubCategory.window!!.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.gravity = Gravity.CENTER
+        dialogSubCategory.window!!.attributes = lp
+        val imgClose = dialogSubCategory.findViewById(R.id.img_close) as ImageView
+
+        val tvTitle = dialogCategory.findViewById(R.id.tv_title) as TextView
+
+        tvTitle.text = "하위 카테고리 선택"
+
+        imgClose.setSafeOnClickListener {
+            dialogSubCategory.dismiss()
+        }
+        val dialogRV = dialogSubCategory.findViewById(R.id.rvPlatform) as RecyclerView
+
+        subCategoryAdapter = SubCategory1Adapter(activity!!, data, this)
+        val linearLayoutManager1 =
+            LinearLayoutManager(
+                activity!!,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        dialogRV.layoutManager = linearLayoutManager1
+        dialogRV.adapter = subCategoryAdapter
+
+
+        if (status.equals("")) {
+            dialogSubCategory.show()
+
+        } else {
+
+        }
+    }
+
+
+    private fun dialogSubCategory1(
+        data: ArrayList<CategoryListModel.Data.Category.SubCategory>,
+        status: String
+    ) {
+        dialogSubCategory1 = Dialog(activity!!)
+        dialogSubCategory1.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogSubCategory1.setCancelable(true)
+        dialogSubCategory1.setContentView(R.layout.dialog_platform)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialogSubCategory1.window!!.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.gravity = Gravity.CENTER
+        dialogSubCategory1.window!!.attributes = lp
+        val imgClose = dialogSubCategory1.findViewById(R.id.img_close) as ImageView
+
+        val tvTitle = dialogSubCategory1.findViewById(R.id.tv_title) as TextView
+
+        tvTitle.text = "하위 카테고리 선택"
+
+        imgClose.setSafeOnClickListener {
+            dialogSubCategory1.dismiss()
+        }
+        val dialogRV = dialogSubCategory1.findViewById(R.id.rvPlatform) as RecyclerView
+
+
+        subCategoryAdapter1 = SubCategoryAdapter1(activity!!, data, this)
+        val linearLayoutManager1 =
+            LinearLayoutManager(
+                activity!!,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        dialogRV.layoutManager = linearLayoutManager1
+        dialogRV.adapter = subCategoryAdapter1
+
+
+
+        if (status.equals("")) {
+            dialogSubCategory1.show()
+
+        } else {
+
+        }
+    }
+
+
+    private fun dialogSubCategory2(
+        data: ArrayList<CategoryListModel.Data.Category.SubCategory>,
+        status: String
+    ) {
+        dialogSubCategory2 = Dialog(activity!!)
+        dialogSubCategory2.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogSubCategory2.setCancelable(true)
+        dialogSubCategory2.setContentView(R.layout.dialog_platform)
+        val lp = WindowManager.LayoutParams()
+        lp.copyFrom(dialogSubCategory2.window!!.attributes)
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.gravity = Gravity.CENTER
+        dialogSubCategory2.window!!.attributes = lp
+        val imgClose = dialogSubCategory2.findViewById(R.id.img_close) as ImageView
+
+        val tvTitle = dialogSubCategory2.findViewById(R.id.tv_title) as TextView
+
+        tvTitle.text = "하위 카테고리 선택"
+
+        imgClose.setSafeOnClickListener {
+            dialogSubCategory2.dismiss()
+        }
+        val dialogRV = dialogSubCategory2.findViewById(R.id.rvPlatform) as RecyclerView
+
+
+        subCategoryAdapter2 = SubCategoryAdapter2(activity!!, data, this)
+        val linearLayoutManager1 =
+            LinearLayoutManager(
+                activity!!,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        dialogRV.layoutManager = linearLayoutManager1
+        dialogRV.adapter = subCategoryAdapter2
+
+
+
+        if (status.equals("")) {
+            dialogSubCategory2.show()
+
+        } else {
+
+        }
+    }
+
+
+    override fun onCategoryClick(listPosition: Int, name: String, id: String) {
+
+
+
+        if (type.equals("category1")) {
+            try{
+                if(!edt_category_edit.text.toString().equals(name) && !edt_category_edit.text.toString().equals("")){
+                    categoryIdList!!.set(0,id)
+                    try{
+                        if(subCatgoryIdList?.size==1){
+                            subCatgoryIdList!!.removeAt(0)
+
+                        }else if(subCatgoryIdList?.size==2){
+                            subCatgoryIdList!!.removeAt(1)
+
+                        }else if(subCatgoryIdList?.size==3){
+                            subCatgoryIdList!!.removeAt(2)
+
+                        }else{
+
+                        }
+
+                    }catch (e:java.lang.Exception){
+
+                    }
+                    edt_sub_category_edit.text?.clear()
+
+                }else if(edt_category_edit.text.toString().equals(name)){
+
+                }else{
+                    categoryIdList!!.add(id)
+
+
+                }
+            }catch (e:Exception){
+
+            }
+
+
+
+            if (listPosition.equals("")) {
+                dialogSubCategory(categoryList!!.get(position.toInt()).subCategory!!, "")
+
+            } else {
+                position = ""
+
+                if (categoryList!!.get(listPosition).subCategory!!.size > 0) {
+                    dialogSubCategory(categoryList!!.get(listPosition).subCategory!!, "true")
+                } else {
+                }
+            }
+
+            edt_category_edit.setText(name)
+        } else if (type.equals("category2")) {
+            try{
+                if(!edt_category1_edit.text.toString().equals(name) && !edt_category1_edit.text.toString().equals("")){
+                    categoryIdList!!.set(1,id)
+                    try{
+                        if(subCatgoryIdList?.size==1){
+                            subCatgoryIdList!!.removeAt(0)
+
+                        }else if(subCatgoryIdList?.size==2){
+                            subCatgoryIdList!!.removeAt(1)
+
+                        }else if(subCatgoryIdList?.size==3){
+                            subCatgoryIdList!!.removeAt(2)
+
+                        }else{
+
+                        }
+
+                    }catch (e:java.lang.Exception){
+
+                    }
+                    edt_sub_category1_edit.text?.clear()
+
+                }else if(edt_category1_edit.text.toString().equals(name)){
+
+                }else{
+                    categoryIdList!!.add(id)
+
+
+                }
+            }catch (e:Exception){
+
+            }
+
+            if (listPosition.equals("")) {
+
+
+                dialogSubCategory1(categoryList!!.get(position1.toInt()).subCategory!!, "")
+            } else {
+                position1 = ""
+                dialogSubCategory1(categoryList!!.get(listPosition).subCategory!!, "true")
+
+            }
+
+            edt_category1_edit.setText(name)
+
+        } else if (type.equals("category3")) {
+            try{
+                if(!edt_category2_edit.text.toString().equals(name) && !edt_category2_edit.text.toString().equals("")){
+                    categoryIdList!!.set(2,id)
+
+                    try{
+                        if(subCatgoryIdList?.size==1){
+                            subCatgoryIdList!!.removeAt(0)
+
+                        }else if(subCatgoryIdList?.size==2){
+                            subCatgoryIdList!!.removeAt(1)
+
+                        }else if(subCatgoryIdList?.size==3){
+                            subCatgoryIdList!!.removeAt(2)
+
+                        }else{
+
+                        }
+
+                    }catch (e:java.lang.Exception){
+
+                    }
+                    edt_sub_category2_edit.text?.clear()
+
+                }else if(edt_category2_edit.text.toString().equals(name)){
+
+                }else{
+                    categoryIdList!!.add(id)
+
+
+                }
+            }catch (e:Exception){
+
+            }
+
+            if (listPosition.equals("")) {
+                dialogSubCategory2(categoryList!!.get(position2.toInt()).subCategory!!, "")
+
+            } else {
+                position2 = ""
+                dialogSubCategory2(categoryList!!.get(listPosition).subCategory!!, "true")
+
+            }
+            edt_category2_edit.setText(name)
+
+        } else {
+
+        }
+        dialogCategory.dismiss()
+    }
+
+    override fun onSubCategoryClick(listPosition: Int, name: String, id: String) {
+
+        subCatgoryIdList!!.add(0,id)
+
+        edt_sub_category_edit.setText(name)
+
+        dialogSubCategory.dismiss()
+    }
+
+    override fun onSubCategoryClick1(listPosition: Int, name: String, id: String) {
+        subCatgoryIdList!!.add(1,id)
+
+        edt_sub_category1_edit.setText(name)
+        dialogSubCategory1.dismiss()
+
+    }
+
+    override fun onSubCategoryClick2(listPosition: Int, name: String, id: String) {
+        subCatgoryIdList!!.add(2,id)
+
+        edt_sub_category2_edit.setText(name)
+        dialogSubCategory2.dismiss()
+
+    }
+
 }

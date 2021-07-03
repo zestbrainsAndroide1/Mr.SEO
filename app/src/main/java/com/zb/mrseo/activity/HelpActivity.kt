@@ -1,3 +1,4 @@
+
 package com.zb.mrseo.activity
 
 import android.app.Activity
@@ -14,6 +15,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zb.moodlist.utility.*
 import com.zb.mrseo.MainActivity
@@ -37,6 +39,7 @@ import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.activity_product.cvApplyForHelp
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import okhttp3.internal.notify
 
 class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,OnChatOptionClick {
     var postId: String = ""
@@ -51,11 +54,10 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_help)
+
         val extras = intent.extras
         if (extras != null) {
             postId = extras.getString("id", "")
-
-
         }
         setUi()
     }
@@ -66,7 +68,7 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
 
-        helperDetailAdapter = HelperDetailAdapter(this@HelpActivity, this@HelpActivity,postId,categoryId,this)
+        helperDetailAdapter = HelperDetailAdapter(this@HelpActivity, this@HelpActivity,postId, intent.getStringExtra("category").toString(),this)
         val linearLayoutManager1 =
             LinearLayoutManager(
                 this@HelpActivity,
@@ -77,7 +79,6 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
         rv_helper?.adapter = helperDetailAdapter
 
         img_edit_content.setOnClickListener(View.OnClickListener {
-
             if (categoryId.equals("1")) {
                 val intent = Intent(this@HelpActivity, EditShopBuyActivity::class.java)
                 intent.putExtra("postId", postId)
@@ -109,8 +110,6 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
             } else {
 
             }
-
-
         })
 
         img_back_help.setSafeOnClickListener {
@@ -169,9 +168,9 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
                                 tv_keyword_name_content.text = response.data!!.keyword.toString()
                                 tv_shopping_mall_name_content.text = response.data!!.name.toString()
                                 tv_description_content.text = response.data!!.description.toString()
-                                tv_remaining_points_content.text = response.data!!.point.toString()+"/"
-
-
+                                tv_remaining_points_content.text = (response.data!!.point!! - response.data!!.helperCount!!.toInt()).toString() +"/"
+                                tv_helper_point.text = response.data!!.point.toString()
+                                tv_total_points_content.text = response.data!!.point.toString()
                             } else if (response.data!!.categoryId!!.equals("2")) {
                                 //1
                                 tv_post_title.text = response.data!!.categoryName.toString()
@@ -179,8 +178,9 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
                                 tv_keyword_name_content.text = response.data!!.keyword.toString()
                                 tv_shopping_mall_name_content.text = response.data!!.name.toString()
                                 tv_description_content.text = response.data!!.description.toString()
-                                tv_remaining_points_content.text = response.data!!.point.toString()+"/"
-
+                                tv_remaining_points_content.text = (response.data!!.point!! - response.data!!.helperCount!!.toInt()).toString() +"/"
+                                tv_helper_point.text = response.data!!.point.toString()
+                                tv_total_points_content.text = response.data!!.point.toString()
 
                             } else if (response.data!!.categoryId!!.equals("3")) {
                                 //3
@@ -188,7 +188,9 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
                                 tv_keyword_name_content.text = response.data!!.keyword.toString()
                                 tv_shopping_mall_name_content.text = response.data!!.name.toString()
                                 tv_description_content.text = response.data!!.description.toString()
-                                tv_remaining_points_content.text = response.data!!.point.toString()+"/"
+                                tv_remaining_points_content.text = (response.data!!.point!! - response.data!!.helperCount!!.toInt()).toString() +"/"
+                                tv_helper_point.text = response.data!!.point.toString()
+                                tv_total_points_content.text = response.data!!.point.toString()
                                 tv_shopping_mall_content.text = getString(R.string.blog_name)
                                 tv_open_market_content.gone()
                                 tv_name_content.gone()
@@ -201,7 +203,9 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
                                 tv_keyword_name_content.text = response.data!!.keyword.toString()
                                 tv_shopping_mall_name_content.text = response.data!!.name.toString()
                                 tv_description_content.text = response.data!!.description.toString()
-                                tv_remaining_points_content.text = response.data!!.point.toString()+"/"
+                                tv_remaining_points_content.text = (response.data!!.point!! - response.data!!.helperCount!!.toInt()).toString() +"/"
+                                tv_helper_point.text = response.data!!.point.toString()
+                                tv_total_points_content.text = response.data!!.point.toString()
                                 tv_shopping_mall_content.text = getString(R.string.cafe_name)
                                 tv_keyword_content.text = getString(R.string.cafe_url)
 
@@ -362,16 +366,15 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
         llNo.setOnClickListener(View.OnClickListener {
             dialogCashView.dismiss()
         })
+
         cvYes.setOnClickListener(View.OnClickListener {
             dialogCashView.dismiss()
-
             changeStatus(id, status)
             HelperDetailAdapter.btnFinish!!.isEnabled=true
             HelperDetailAdapter.btnViewProof!!.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6CCF71")));
-
+            HelperDetailAdapter.con!!.isVisible = false
         })
         dialogCashView.show()
-
     }
 
     private fun changeStatus(id1: String, status1: String) {
@@ -381,7 +384,6 @@ class HelpActivity : AppCompatActivity(), ApiResponseInterface, OnStatusClick,On
                 activity = this@HelpActivity,
                 objectType = ApiInitialize.initialize()
                     .changeStatus(
-
                         "Bearer ".plus(mUserModel!!.token.toString()),
                         id1,
                         status1

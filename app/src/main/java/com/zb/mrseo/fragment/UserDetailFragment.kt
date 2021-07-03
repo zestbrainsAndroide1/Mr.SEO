@@ -52,7 +52,6 @@ class UserDetailFragment : Fragment(),ApiResponseInterface {
 
     }
     private fun setUi() {
-        tv_coin_desc.text="I have "+mUserModel?.coin.toString()+" Coins for use"
         getProfile()
 
         img_logout.setSafeOnClickListener {
@@ -119,7 +118,7 @@ class UserDetailFragment : Fragment(),ApiResponseInterface {
         val tvNo = dialog1.findViewById(R.id.tvNo) as TextView
         val tvYes = dialog1.findViewById(R.id.tvYes) as TextView
         val tvTitle = dialog1.findViewById(R.id.tv_title) as TextView
-        tvTitle.text = "Are you sure you want to logout?"
+        tvTitle.text = "로그아웃 하시겠습니까?"
 
 
 
@@ -172,6 +171,7 @@ class UserDetailFragment : Fragment(),ApiResponseInterface {
 
                             tv_user_name.text = response.data!!.name.toString()
                             tv_total_coins_user.text = response.data!!.coin.toString()
+                            tv_coin_desc.text= response.data!!.coin.toString().toString()+" 포인트 사용 가능합니다."
 
                         } catch (e: Exception) {
 

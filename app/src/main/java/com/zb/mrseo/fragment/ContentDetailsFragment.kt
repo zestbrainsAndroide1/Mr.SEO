@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
@@ -53,6 +54,8 @@ class ContentDetailsFragment : Fragment(), OnPlatformClick, ApiResponseInterface
     var registerPoint: String = ""
     private var profilePath: String = ""
     var mUserModel: LoginModel.Data? = null
+    var point=""
+    var coin =""
 
 
     override fun onCreateView(
@@ -68,11 +71,10 @@ class ContentDetailsFragment : Fragment(), OnPlatformClick, ApiResponseInterface
         val bundle = this.arguments
         if (bundle != null) {
             categoryId = bundle.getString("id").toString()
+            point = bundle.getString("point").toString()
+            coin = bundle.getString("coin").toString()
         }
-
         setUi()
-
-
     }
 
     private fun setUi() {
@@ -82,16 +84,47 @@ class ContentDetailsFragment : Fragment(), OnPlatformClick, ApiResponseInterface
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
 
+        edtHelpersContent.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+            ) {
+            }
 
-        tv_total_points_shop.text = mUserModel!!.coin.toString()
-        if(mUserModel!!.coin.toString().equals("0")){
-            edtPoint.isEnabled=false
-            tv_note_shop.visible()
-            ShowToast("Oops, You don't have sufficient coin",requireActivity())
-        }else{
-            edtPoint.filters = arrayOf<InputFilter>(InputFilterMinMax("1",  mUserModel!!.coin.toString()))
+            override fun onTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+            ) {
+                try{
+                    var helper=edtHelpersContent.text.toString()
+                    var total=helper.toInt()*point.toInt()
+                    edtPoint.setText(total.toString())
+                    if(total > coin.toInt()){
+                        edtPoint.isEnabled=false
+                        tv_note_shop.visible()
+                        ShowToast("Oops, You don't have sufficient coin",requireActivity())
+                    }else{
+                        tv_note_shop.gone()
 
-        }
+                    }
+                }catch(e:Exception){
+
+                }
+
+
+
+            }
+
+            override fun afterTextChanged(s: Editable) {
+
+
+            }
+        })
+
 
         platformDialog()
         edtPlatForm.setSafeOnClickListener {
@@ -113,7 +146,6 @@ class ContentDetailsFragment : Fragment(), OnPlatformClick, ApiResponseInterface
         }catch (e:Exception){
 
         }
-
 
         cvAdd.setSafeOnClickListener {
             title = edtTitle.text.toString()
@@ -272,7 +304,7 @@ class ContentDetailsFragment : Fragment(), OnPlatformClick, ApiResponseInterface
                                 categoryId,
                                 mallName,
                                 description,
-                                registerPoint
+                                (registerPoint.toInt() / point.toInt()).toString()
                             ),
                         TYPE = WebConstant.ADD_CONTENT,
                         isShowProgressDialog = true,

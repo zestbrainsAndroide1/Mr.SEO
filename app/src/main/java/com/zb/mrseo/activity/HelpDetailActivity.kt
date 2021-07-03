@@ -5,11 +5,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -21,24 +20,17 @@ import com.zb.moodlist.utility.*
 import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
 import com.zb.mrseo.adapter.AddNewImagesAdapter
-import com.zb.mrseo.adapter.HomeAdapter
 import com.zb.mrseo.adapter.ImageAdapter
 import com.zb.mrseo.interfaces.OnItemSelectListener
 import com.zb.mrseo.model.LoginModel
 import com.zb.mrseo.model.MyHelpDetailModel
-import com.zb.mrseo.model.PostModel
 import com.zb.mrseo.model.UploadModel
 import com.zb.mrseo.restapi.*
 import com.zb.mrseo.utility.AddProductImage
 import kotlinx.android.synthetic.main.activity_help.*
-
 import kotlinx.android.synthetic.main.activity_help_detail.*
 import kotlinx.android.synthetic.main.activity_post_detail.*
-import kotlinx.android.synthetic.main.activity_post_detail.tv_keyword_name
-import kotlinx.android.synthetic.main.activity_post_detail.tv_name
-import kotlinx.android.synthetic.main.activity_post_detail.tv_post_title
 import kotlinx.android.synthetic.main.activity_product.*
-import kotlinx.android.synthetic.main.activity_product.cvApplyForHelp
 import kotlinx.android.synthetic.main.fragment_home.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -79,8 +71,6 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
         val extras = intent.extras
         if (extras != null) {
             helpId = extras.getString("id", "")
-
-
         }
         context = this
 
@@ -103,6 +93,20 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
             intent.putExtra("receiverId",receiverId)
             intent.putExtra("type","help")
 
+            startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+        }
+
+        btn1.setSafeOnClickListener {
+            val intent = Intent(this@HelpDetailActivity, ViewHelpImgActivity::class.java)
+            intent.putExtra("type","1")
+            startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+        }
+
+        btn2.setSafeOnClickListener {
+            val intent = Intent(this@HelpDetailActivity, ViewHelpImgActivity::class.java)
+            intent.putExtra("type","2")
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
@@ -169,7 +173,6 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                 activity = this@HelpDetailActivity,
                 objectType = ApiInitialize.initialize()
                     .getMyHelperDetail(
-
                         "Bearer ".plus(mUserModel!!.token.toString()),
                         helpId
                     ),
@@ -198,13 +201,11 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
 
                 when (response.status) {
                     200 -> {
-
                         try {
-
                             categoryId = response.data!!.get(0)!!.categoryId!!.toString()
-                            receiverId= response.data!!.get(0)!!.toUserId!!.toString()
+                            receiverId = response.data!!.get(0)!!.toUserId!!.toString()
                             receiverName = response.data!!.get(0)!!.toUserName!!.toString()
-                            threadId= response.data!!.get(0)!!.threadId!!.toString()
+                            threadId = response.data!!.get(0)!!.threadId!!.toString()
 
                             if (response.data!!.get(0)!!.categoryId!!.equals("1")) {
                                 //1
@@ -220,8 +221,7 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                                     response.data!!.get(0).description.toString()
                                 tv_remaining_points_help.text =
                                     response.data!!.get(0).point.toString() + "/"
-                                tv_total_points_help.text =
-                                    response.data!!.get(0).helperCount.toString()
+                                tv_total_points_help.text = response.data!!.get(0).requiredPoint.toString()
 
 
                             } else if (response.data!!.get(0)!!.categoryId!!.equals("2")) {
@@ -240,7 +240,7 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                                 tv_remaining_points_help.text =
                                     response.data!!.get(0).point.toString() + "/"
                                 tv_total_points_help.text =
-                                    response.data!!.get(0).helperCount.toString()
+                                    response.data!!.get(0).requiredPoint.toString()
 
                             } else if (response.data!!.get(0)!!.categoryId!!.equals("3")) {
                                 upload = 1
@@ -257,7 +257,7 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                                 tv_remaining_points_help.text =
                                     response.data!!.get(0).point.toString() + "/"
                                 tv_total_points_help.text =
-                                    response.data!!.get(0).helperCount.toString()
+                                    response.data!!.get(0).requiredPoint.toString()
 
                                 tv_shopping_mall_help.text = getString(R.string.blog_name)
                                 tv_open_market_help.gone()
@@ -279,7 +279,7 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                                 tv_remaining_points_help.text =
                                     response.data!!.get(0).point.toString() + "/"
                                 tv_total_points_help.text =
-                                    response.data!!.get(0).helperCount.toString()
+                                    response.data!!.get(0).requiredPoint.toString()
 
                                 tv_shopping_mall_help.text = getString(R.string.cafe_name)
                                 tv_keyword_help.text = getString(R.string.cafe_url)
@@ -287,7 +287,14 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                             } else {
 
                             }
-                            btn_status.text = response.data!!.get(0).status.toString()
+
+
+                            when(response.data!!.get(0).status){
+                                "finished" -> btn_status.text = "최종완료"
+                                "cash_sent" -> btn_status.text = "송금완료"
+                                "request_completed" -> btn_status.text = "요청완료"
+                                else -> btn_status.text = "증빙완료"
+                            }
 
                             if (response.data!!.get(0).keyword.toString().equals("")) {
                                 tv_keyword_name_help.gone()
@@ -299,7 +306,10 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                             }
 
 
-                            if(response.data?.get(0)?.status.equals("proofs_checked") || response.data?.get(0)?.status.equals("finished")){
+                            if (response.data?.get(0)?.status.equals("proofs_checked") || response.data?.get(
+                                    0
+                                )?.status.equals("finished")
+                            ) {
                                 rvImg.gone()
                                 rvImg1.visible()
                                 ll_img.visible()
@@ -308,7 +318,10 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                                 imgAdapter.clear()
                                 imgAdapter.addAll(response.data!!.get(0).proofImage!!)
                                 cvSave.gone()
-                            }else if (response.data!!.get(0).proofImage!!.size == 1 && response.data!!.get(0).categoryId.equals("1")) {
+                            } else if (response.data!!.get(0).proofImage!!.size == 1 && response.data!!.get(
+                                    0
+                                ).categoryId.equals("1")
+                            ) {
                                 ll_img.visible()
                                 rvImg1.visible()
                                 img_upload_help.visible()
@@ -347,14 +360,21 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
 
                 when (response.status) {
                     200 -> {
+                        try {
+                            if (upload == 2 && isUpload == false) {
+                                if (addProductImages?.size == 2) {
+                                    isUpload = true
+                                    upload()
+                                }
 
-                        if (upload == 2 && isUpload == false) {
-                            isUpload = true
-                            upload()
-                        } else {
-                            getHelpDetail()
+                            } else {
+                                getHelpDetail()
+
+                            }
+                        } catch (e: Exception) {
 
                         }
+
 
                     }
                     else -> ShowToast(response.message!!, this@HelpDetailActivity)
@@ -416,7 +436,6 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
                     if (report.areAllPermissionsGranted()) {
 
                         ImagePicker.with(this@HelpDetailActivity)
-                            .crop(16f, 16f)
                             .compress(1024)
                             //Final image size will be less than 1 MB(Optional)
                             .start()
@@ -456,56 +475,59 @@ class HelpDetailActivity : AppCompatActivity(), ApiResponseInterface, OnItemSele
             val requestFile1: RequestBody
             var profileImage1: MultipartBody.Part? = null
 
-            if (isUpload == true && isStatus==true) {
-
-                requestFile1 =
-                    File(addProductImages!![0].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
-                profileImage1 =
-                    MultipartBody.Part.createFormData(
-                        "file",
-                        "profile.jpg",
-                        requestFile1
-                    )
-                isStatus=false
-
-            }else if (isUpload == true) {
-
-                requestFile1 =
-                    File(addProductImages!![1].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
-                profileImage1 =
-                    MultipartBody.Part.createFormData(
-                        "file",
-                        "profile.jpg",
-                        requestFile1
-                    )
-
+            if(addProductImages!!.size == 0) {
+                // Toast.makeText(this, "사진을 등록해주세요!", Toast.LENGTH_SHORT).show()
             } else {
-
-                requestFile1 =
-                    File(addProductImages!![0].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
-                profileImage1 =
-                    MultipartBody.Part.createFormData(
-                        "file",
-                        "profile.jpg",
-                        requestFile1
-                    )
-
-
+                if (isUpload == true && isStatus==true) {
+                    requestFile1 = File(addProductImages!![0].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
+                    profileImage1 = MultipartBody.Part.createFormData("file", "profile.jpg", requestFile1)
+                    isStatus=false
+                }else if (isUpload == true) {
+                    requestFile1 = File(addProductImages!![1].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
+                    profileImage1 = MultipartBody.Part.createFormData("file", "profile.jpg", requestFile1)
+                } else {
+                    requestFile1 =
+                        File(addProductImages!![0].imageURI).asRequestBody("image/*".toMediaTypeOrNull())
+                    profileImage1 =
+                        MultipartBody.Part.createFormData(
+                            "file",
+                            "profile.jpg",
+                            requestFile1
+                        )
+                }
             }
+
             val helpId1 = helpId.toRequestBody("text/plain".toMediaTypeOrNull())
 
-            ApiRequest<Any>(
-                activity = this@HelpDetailActivity,
-                objectType = ApiInitialize.initialize()
-                    .upload(
-                        "Bearer ".plus(mUserModel!!.token.toString()),
-                        helpId1,
-                        profileImage1
-                    ),
-                TYPE = WebConstant.UPLOAD,
-                isShowProgressDialog = true,
-                apiResponseInterface = this@HelpDetailActivity
-            )
+            if(categoryId == "1" && addProductImages!!.size == 2){
+                ApiRequest<Any>(
+                    activity = this@HelpDetailActivity,
+                    objectType = ApiInitialize.initialize()
+                        .upload(
+                            "Bearer ".plus(mUserModel!!.token.toString()),
+                            helpId1,
+                            profileImage1!!
+                        ),
+                    TYPE = WebConstant.UPLOAD,
+                    isShowProgressDialog = true,
+                    apiResponseInterface = this@HelpDetailActivity
+                )
+            } else if(categoryId != "1" && addProductImages!!.size == 1) {
+                ApiRequest<Any>(
+                    activity = this@HelpDetailActivity,
+                    objectType = ApiInitialize.initialize()
+                        .upload(
+                            "Bearer ".plus(mUserModel!!.token.toString()),
+                            helpId1,
+                            profileImage1!!
+                        ),
+                    TYPE = WebConstant.UPLOAD,
+                    isShowProgressDialog = true,
+                    apiResponseInterface = this@HelpDetailActivity
+                )
+            } else {
+                Toast.makeText(this, "사진을 더 등록해주세요!", Toast.LENGTH_SHORT).show()
+            }
 
         } else {
             SnackBar.show(

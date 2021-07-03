@@ -21,6 +21,8 @@ import com.zb.mrseo.MainActivity;
 import com.zb.mrseo.R;
 import com.zb.mrseo.activity.ChatActivity;
 import com.zb.mrseo.activity.ChatHistoryActivity;
+import com.zb.mrseo.activity.HelpActivity;
+import com.zb.mrseo.activity.SplashActivity;
 import com.zb.mrseo.restapi.WebConstant;
 import com.zb.mrseo.utility.AppConstants;
 import com.zb.mrseo.utility.Prefs2;
@@ -56,7 +58,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             try {
                 HashMap<String, String> dataMap = getDataHashMap(new JSONObject(remoteMessage.getData()));
-
                 sendNotification(title, msg, dataMap);
 
             } catch (JSONException e) {
@@ -72,6 +73,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         int interval;
         long totalTime;
         Intent intent = null;
+        String msg = "";
+
+//        if(dataMap.get("push_type").equals("1") || dataMap.get("push_type").equals("2")){
+//            msg=notificationBody;
+//        }else {
+        msg=dataMap.get("message");
+        // }
 
 
         /*intent = new Intent(this, SplashActivity.class);
@@ -107,11 +115,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
 
+        }else{
+
+            intent = new Intent(this, MainActivity.class);
+            intent.putExtra("show", "content1");
+
+
+
+
+
         }
 
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         int notifId = (int) System.currentTimeMillis();

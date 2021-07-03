@@ -47,6 +47,7 @@ class HomeFragment : Fragment(),ApiResponseInterface {
         ) as LoginModel.Data
 
         tv_coin_count1.text=mUserModel!!.coin.toString()
+
         homeAdapter = HomeAdapter(activity!!)
         val linearLayoutManager1 =
             LinearLayoutManager(
@@ -108,20 +109,17 @@ class HomeFragment : Fragment(),ApiResponseInterface {
 
                 when (response.status) {
                     200 -> {
-
+                        tv_coin_count1.text= response.coin.toString()
                         homeAdapter.clear()
                         if (response.data!!.size > 0) {
                             homeAdapter.addAll(response.data!!)
                         } else {
 
                         }
-
                     }
                     else -> ShowToast(response.message!!, activity!!)
                 }
             }
-
-
         }
     }
 

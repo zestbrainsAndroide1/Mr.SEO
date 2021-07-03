@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:paddingEnd="@dimen/_4sdp"
-
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.github.siyamed.shapeimageview.mask.PorterShapeImageView
@@ -16,6 +15,4 @@
         android:layout_marginStart="18dp"
         android:scaleType="fitXY"
         app:siShape="@drawable/round" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

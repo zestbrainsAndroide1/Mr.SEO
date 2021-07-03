@@ -19,56 +19,75 @@ class HomeModel {
 
     @SerializedName("data")
     @Expose
-    var data:  ArrayList<Data>? = null
+    var data: ArrayList<Data>? = null
 
     class Data {
 
 
+        @SerializedName("post_id")
+        @Expose
+        var postId: Int? = null
+
+        @SerializedName("user_id")
+        @Expose
+        var userId: Int? = null
+
+        @SerializedName("category_id")
+        @Expose
+        var categoryId: Int? = null
 
 
-            @SerializedName("post_id")
+        @SerializedName("title")
+        @Expose
+        var title: String? = null
+
+        @SerializedName("color")
+        @Expose
+        var color: String? = null
+
+        @SerializedName("email")
+        @Expose
+        var email: String? = null
+
+        @SerializedName("mall_name")
+        @Expose
+        var mallName: String? = null
+
+
+        @SerializedName("blog_name")
+        @Expose
+        var blogName: String? = null
+
+        @SerializedName("cafe_name")
+        @Expose
+        var cafeName: String? = null
+
+        @SerializedName("register_point")
+        @Expose
+        var registerPoint: Int? = null
+
+        @SerializedName("helper_count")
+        @Expose
+        var helperCount: String? = null
+
+        @SerializedName("helper_user")
+        @Expose
+        var helperUser: String? = null
+
+        @SerializedName("advertisements")
+        @Expose
+        var advertisements: Advertisement? = null
+
+        class Advertisement {
+
+            @SerializedName("image")
             @Expose
-            var postId: Int? = null
+            var image: String? = null
 
-            @SerializedName("user_id")
+            @SerializedName("url")
             @Expose
-            var userId: Int? = null
-
-            @SerializedName("title")
-            @Expose
-            var title: String? = null
-
-            @SerializedName("color")
-            @Expose
-            var color: String? = null
-
-            @SerializedName("email")
-            @Expose
-            var email: String? = null
-
-            @SerializedName("register_point")
-            @Expose
-            var registerPoint: Int? = null
-
-            @SerializedName("helper_count")
-            @Expose
-            var helperCount: Int? = null
-
-            @SerializedName("advertisements")
-            @Expose
-            var advertisements: Advertisement? = null
-            class Advertisement {
-
-                @SerializedName("image")
-                @Expose
-                var image: String? = null
-
-                @SerializedName("url")
-                @Expose
-                var url: String? = null
-            }
-
-
+            var url: String? = null
+        }
 
 
     }

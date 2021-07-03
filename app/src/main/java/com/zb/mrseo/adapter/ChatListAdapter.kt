@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,10 +57,11 @@ class ChatListAdapter(private val mActivity: Context) :
         holder: MyViewHolder,
         @SuppressLint("RecyclerView") listPosition: Int
     ) {
-
         holder.tvMsg.text=filteredData[listPosition].messageLatest!!.message.toString()
         holder.tvUser.text=filteredData[listPosition].receiverUser!!.name.toString()
         holder.tvTime.text=getUTCTOLOCALFromServer(filteredData[listPosition].messageLatest!!.createdAt.toString())
+
+        Log.d("chat : ", filteredData[listPosition].toString())
 
         holder.llMain.setOnClickListener(View.OnClickListener {
 
@@ -81,13 +83,6 @@ class ChatListAdapter(private val mActivity: Context) :
             sDF.timeZone = TimeZone.getTimeZone("UTC")
             val date = sDF.parse(originalString)
             newstr = SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date)
-            println(
-                """
-                
-                $newstr
-                
-                """.trimIndent()
-            )
         } catch (e: ParseException) {
             //Handle exception here
             e.printStackTrace()
@@ -108,7 +103,7 @@ class ChatListAdapter(private val mActivity: Context) :
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
 
-                        if (row.senderUser!!.name!!.toLowerCase(Locale.ROOT).contains(charSequence)) {
+                        if (row.receiverUser!!.name!!.toLowerCase(Locale.ROOT).contains(charSequence)) {
                             filteredList.add(row)
                         }
                     }

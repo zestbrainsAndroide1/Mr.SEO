@@ -73,5 +73,10 @@ class AddCafeModel {
         @SerializedName("keyword")
         @Expose
         var keyword: String? = null
+
+        @SerializedName("title")
+        @Expose
+        var title: String? = null
+
     }
 }

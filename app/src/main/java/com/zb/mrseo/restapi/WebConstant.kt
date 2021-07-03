@@ -50,7 +50,8 @@ object WebConstant {
     const val CHANGE_STATUS= 41
     const val GET_NOTICE= 42
     const val GET_STATUS= 43
-
+    const val DELETE_POST= 44
+    const val GET_CATEGORY_LIST= 45
 
 
 }

@@ -185,7 +185,7 @@
         android:layout_marginStart="@dimen/margin_18dp"
         android:layout_marginEnd="@dimen/margin_18dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/img1"/>
+        android:src="@drawable/img_detail1"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_add"
         android:visibility="gone"

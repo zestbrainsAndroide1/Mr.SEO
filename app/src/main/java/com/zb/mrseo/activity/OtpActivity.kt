@@ -1,8 +1,11 @@
 package com.zb.mrseo.activity
 
 import `in`.aabhasjindal.otptextview.OTPListener
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
@@ -10,10 +13,8 @@ import com.google.android.gms.tasks.TaskExecutors
 
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.*
 import com.zb.moodlist.utility.*
 import com.zb.mrseo.MainActivity
 import com.zb.mrseo.R
@@ -38,6 +39,7 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
     var deviceType: String = "android"
      var OTP:String=""
     var number: String = ""
+    var isCheck=false
 
     private var mAuth: FirebaseAuth? = null
     private var mVerificationId: String? = null
@@ -68,23 +70,35 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
     }
 
     private fun setUi() {
-        tv_no.text=dataModel.mobile.toString()
-        otp_view.setOtpListener(object : OTPListener {
+        var num = 0
+        tv_no.text="+82 "+dataModel.mobile.toString()
+        otp_view.otpListener = object : OTPListener {
             override fun onInteractionListener() {
-                // fired when user types something in the Otpbox
+               /* num++
+                Log.d("num : ", num.toString())
+                if(num == 6){
+                    otp_button.setBackgroundColor(Color.parseColor("#4EA3FE"))
+                    otp_button.isEnabled = true
+                    otp_button.isClickable = true
+                } else {
+                    otp_button.setBackgroundColor(Color.parseColor("#777777"))
+                    otp_button.isEnabled = false
+                }*/
             }
 
             override fun onOTPComplete(otp: String) {
                 // fired when user has entered the OTP fully.
+                Log.d("onOTPComplete : ", otp.toString())
                 OTP = otp
             }
-        })
-        cvVerify.setSafeOnClickListener {
-            if(!number.equals(OTP)){
-                showToast("Wrong Otp",this@OtpActivity)
+        }
+        otp_button.setSafeOnClickListener {
+            isCheck=true
+            if(!OTP.equals(number)){
+                Log.d("otp plz : ", number.toString())
+                showToast(getString(R.string.otp_validation),this@OtpActivity)
             }else{
-                verifyOtp()
-
+                signUp()
             }
         }
     }
@@ -110,7 +124,12 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
                 val token1 = token.toRequestBody("text/plain".toMediaTypeOrNull())
 
 
-                    val requestFile1: RequestBody
+                val mallLink = dataModel.url.toRequestBody("text/plain".toMediaTypeOrNull())
+                val mallCategory = dataModel.mallCategory.toRequestBody("text/plain".toMediaTypeOrNull())
+                val mallSubCategory = dataModel.mallSubCategory.toRequestBody("text/plain".toMediaTypeOrNull())
+
+
+                val requestFile1: RequestBody
                     var profileImage1: MultipartBody.Part? = null
                     requestFile1 = File(dataModel.bankImg).asRequestBody("image/*".toMediaTypeOrNull())
                     profileImage1 =
@@ -136,8 +155,10 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
                                 bankName1,
                                 accNo1,
                                 token1,
-                                profileImage1
-
+                                profileImage1,
+                                mallLink,
+                                mallCategory,
+                                mallSubCategory
                             ),
                         TYPE = WebConstant.SIGN_UP,
                         isShowProgressDialog = true,
@@ -167,8 +188,6 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
 
                 when (response.status) {
                     200 -> {
-
-
                         Prefs.setObject(
                             context = this@OtpActivity,
                             key = AppConstant.ACCOUNT_DATA,
@@ -195,16 +214,12 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
 
                 when (response.status) {
                     200 -> {
-
                         ShowToast(response.message!!, this@OtpActivity)
-
                         signUp()
-
                     }
                     else -> ShowToast(response.message!!, this@OtpActivity)
                 }
             }
-
         }
     }
 
@@ -215,7 +230,6 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
 
     private fun verifyOtp() {
         if (isNetworkAvailable(this@OtpActivity)) {
-
             ApiRequest<Any>(
                 activity = this@OtpActivity,
                 objectType = ApiInitialize.initialize()
@@ -225,13 +239,11 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
                         dataModel.countryCode,
                         "1",
                         token
-
                     ),
                 TYPE = WebConstant.VERIFY_OTP,
                 isShowProgressDialog = true,
                 apiResponseInterface = this@OtpActivity
             )
-
         } else {
             SnackBar.show(
                 this@OtpActivity,
@@ -246,13 +258,15 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
 
 
     private fun sendVerificationCode(mobile: String) {
+
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-            "+82" + mobile,
-            60,
-            TimeUnit.SECONDS,
-            this,
+            "+82" + mobile,      // Phone number to verify
+            60,               // Timeout duration
+            TimeUnit.SECONDS, // Unit of timeout
+            this,            // Activity (for callback binding)
             mCallbacks
         )
+
     }
     //the callback to detect the verification status
     private val mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks =
@@ -260,20 +274,20 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
             override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
 
                 //Getting the code sent by SMS
-                val code: String = phoneAuthCredential.getSmsCode()
+                val code: String = phoneAuthCredential.smsCode
 
                 //sometime the code is not detected automatically
                 //in this case the code will be null
                 //so user has to manually enter the code
                 if (code != null) {
-                    //editTextCode.setText(code);
-                    //verifying the code
                     verifyVerificationCode(code)
                     number = code
+                    Log.d("code : ", number.toString())
                 }
             }
 
             override fun onVerificationFailed(e: FirebaseException) {
+                Log.e("otpMessage",e.message.toString())
                 Toast.makeText(this@OtpActivity, e.message, Toast.LENGTH_LONG).show()
             }
 
@@ -297,15 +311,16 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
         signInWithPhoneAuthCredential(credential)
     }
 
+
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         mAuth!!.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 OnCompleteListener<Any?> { task ->
                     if (task.isSuccessful) {
+                              signUp()
                         //verification successful we will start the profile activity
                         Toast.makeText(this@OtpActivity, "Success", Toast.LENGTH_SHORT).show()
                     } else {
-
                         //verification unsuccessful.. display an error message
                         var message = "Somthing is wrong, we will fix it soon..."
                         if (task.exception is FirebaseAuthInvalidCredentialsException) {
@@ -321,8 +336,4 @@ class OtpActivity : AppCompatActivity(), ApiResponseInterface {
                 }
             }
     }
-
-
-
-
 }

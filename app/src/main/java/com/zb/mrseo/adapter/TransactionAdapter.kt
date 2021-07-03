@@ -49,11 +49,13 @@ class TransactionAdapter(
         holder: MyViewHolder,
         @SuppressLint("RecyclerView") listPosition: Int
     ) {
-        holder.tvCoins.text = mModel[listPosition].amount.toString() + " coins"
+        holder.tvCoins.text = mModel[listPosition].amount.toString() + " 포인트"
         holder.tvDate.text = mModel[listPosition].createdAt.toString()
 
-
-        holder.tvStatus.text = mModel[listPosition].type.toString()
+        when(mModel[listPosition].type.toString()){
+            "Received" -> holder.tvStatus.text = "받음"
+            "Used" -> holder.tvStatus.text = "사용"
+        }
 
         if (mModel[listPosition].type.toString().equals("Used")) {
             holder.tvStatus.setTextColor(Color.parseColor("#FF0000"))

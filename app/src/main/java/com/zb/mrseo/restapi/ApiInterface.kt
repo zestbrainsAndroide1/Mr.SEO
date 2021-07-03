@@ -42,7 +42,10 @@ interface ApiInterface {
         @Part("bank_name") bank_name: RequestBody,
         @Part("account_number") account_number: RequestBody,
         @Part("push_token") push_token: RequestBody,
-        @Part bank_image: MultipartBody.Part
+        @Part bank_image: MultipartBody.Part,
+        @Part("mall_link") mall_link: RequestBody,
+        @Part("mall_category") mall_category: RequestBody,
+        @Part("mall_subcategory") mall_subcategory: RequestBody
     ): Call<SignUpModel>
 
     @FormUrlEncoded
@@ -64,7 +67,7 @@ interface ApiInterface {
     ): Call<SupportModel>
 
 
-    @POST("V1/post/getCategory")
+    @GET("V1/post/getCategory")
     fun getCategory(
         @Header("Authorization") Authorization: String
     ): Call<CategoryModel>
@@ -78,7 +81,7 @@ interface ApiInterface {
     @POST("V1/post/createPosts")
     fun addContent(
         @Header("Authorization") Authorization: String,
-        @Field("title") title: String,
+        @Field("keyword") title: String,
         @Field("platform_id") platform_id: String,
         @Field("category_id") category_id: String,
         @Field("name") mall_name: String,
@@ -160,7 +163,10 @@ interface ApiInterface {
         @Part("mobile") mobile: RequestBody,
         @Part("bank_name") bank_name: RequestBody,
         @Part("account_number") account_number: RequestBody,
-        @Part bank_image: MultipartBody.Part): Call<EditProfileModel>
+        @Part bank_image: MultipartBody.Part,
+        @Part("mall_link") mall_link: RequestBody,
+        @Part("mall_category") mall_category: RequestBody,
+        @Part("mall_subcategory") mall_subcategory: RequestBody): Call<EditProfileModel>
 
 
     @Multipart
@@ -203,7 +209,10 @@ interface ApiInterface {
         @Field("country_code") country_code: String,
         @Field("mobile") mobile: String,
         @Field("bank_name") bank_name: String,
-        @Field("account_number") account_number:String): Call<EditProfileModel>
+        @Field("account_number") account_number:String,
+        @Field("mall_link") mall_link: String,
+        @Field("mall_category") mall_category:String,
+        @Field("mall_subcategory") mall_subcategory: String): Call<EditProfileModel>
 
     @FormUrlEncoded
     @POST("V1/user/updateNotificationStatus")
@@ -424,6 +433,15 @@ interface ApiInterface {
     fun getStatus(
         @Header("Authorization") Authorization: String): Call<BtnStatusModel>
 
+    @FormUrlEncoded
+    @POST("V1/post/helper_post_delete")
+    fun deletePost(
+        @Header("Authorization") Authorization: String,
+        @Field("help_id") help_id: String): Call<DeletePostModel>
+
+
+    @GET("V1/post/getAllCategory")
+    fun getCategoryList(): Call<CategoryListModel>
 
 }
 

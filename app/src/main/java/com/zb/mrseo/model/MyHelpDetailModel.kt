@@ -39,6 +39,10 @@ class MyHelpDetailModel {
         @Expose
         var userName: String? = null
 
+        @SerializedName("required_point")
+        @Expose
+        var requiredPoint: String? = null
+
 
 
         @SerializedName("to_user_id")

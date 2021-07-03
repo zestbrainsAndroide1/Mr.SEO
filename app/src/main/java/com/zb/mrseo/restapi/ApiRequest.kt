@@ -95,6 +95,7 @@ class ApiRequest<T>(private val activity: Activity,
                 }
             }
         }
+        Log.d("@@@@@@@@@@@@", response.toString())
     }
 
     override fun onFailure(call: Call<T>, error: Throwable) {

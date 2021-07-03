@@ -14,17 +14,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.zb.moodlist.utility.*
 import com.zb.mrseo.R
-import com.zb.mrseo.activity.ChatHistoryActivity
 import com.zb.mrseo.activity.PostDetailActivity
 import com.zb.mrseo.model.ApplyModel
 import com.zb.mrseo.model.HomeModel
 import com.zb.mrseo.model.LoginModel
-import com.zb.mrseo.model.PostModel
 import com.zb.mrseo.restapi.*
 import kotlinx.android.synthetic.main.activity_post_detail.*
 
@@ -32,10 +29,11 @@ import kotlinx.android.synthetic.main.activity_post_detail.*
 class HomeAdapter(
     private val mActivity: Context
 ) :
-    RecyclerView.Adapter<HomeAdapter.MyViewHolder>(),ApiResponseInterface{
+    RecyclerView.Adapter<HomeAdapter.MyViewHolder>(), ApiResponseInterface {
     private var mModel = ArrayList<HomeModel.Data>()
     var mUserModel: LoginModel.Data? = null
-var postId:String=""
+    var postId: String = ""
+    var categoryId : String = ""
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -87,36 +85,71 @@ var postId:String=""
 
 
 
-            try {
-                holder.tvCategory.text = mModel[listPosition].title.toString()
+        try {
 
-                holder.llTop.setBackgroundColor(Color.parseColor(mModel[listPosition].color.toString()))
-                holder.tvUserName.text = mModel[listPosition].email.toString()
+            if(mModel[listPosition].categoryId.toString().equals("1") || mModel[listPosition].categoryId.toString().equals("2")){
+                holder.tvUserName.text = mModel[listPosition].mallName.toString()
 
+            }else  if(mModel[listPosition].categoryId.toString().equals("3")){
+                holder.tvUserName.text = mModel[listPosition].blogName.toString()
 
-                holder.tvPoints.text =
-                    mModel[listPosition].helperCount.toString() + "/" + mModel[listPosition].registerPoint.toString()
+            }else  if(mModel[listPosition].categoryId.toString().equals("4")){
+                holder.tvUserName.text = mModel[listPosition].cafeName.toString()
 
-            } catch (e: Exception) {
+            }else{
 
             }
+            holder.tvCategory.text = mModel[listPosition].title.toString()
+            holder.llTop.setBackgroundColor(Color.parseColor(mModel[listPosition].color.toString()))
+
+/*
+            holder.tvPoints.text = mModel[listPosition].registerPoint!!.minus(mModel[listPosition].helperCount!!.toInt()).toString()
+*/
+
+
+/*
+            holder.tvPoints.text = mModel[listPosition].registerPoint!!.minus(mModel[listPosition].helperCount!!.toInt()).toString() + "/" + mModel[listPosition].registerPoint.toString()
+*/
+
+            try{
+                var point=mModel[listPosition].helperCount!!.toInt() - mModel[listPosition].helperUser!!.toInt()
+                holder.tvPoints.text = point.toString()
+
+            }catch (e:Exception){
+
+            }
+
+
+
+        } catch (e: Exception) {
+
+        }
         mUserModel = Prefs.getObject(
             mActivity,
             AppConstant.ACCOUNT_DATA, "", LoginModel.Data::class.java
         ) as LoginModel.Data
 
+
         holder.cvHome.setOnClickListener(View.OnClickListener {
-            postId=mModel[listPosition].postId.toString()
+            postId = mModel[listPosition].postId.toString()
 
-           applyForHelp(mModel[listPosition].postId.toString())
+            val intent = Intent(mActivity, PostDetailActivity::class.java)
+            intent.putExtra("id", postId)
+            intent.putExtra("helpId", mModel[listPosition].postId.toString())
+
+            (mActivity as Activity).startActivity(intent)
+            (mActivity as Activity).overridePendingTransition(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
         })
-        holder.imgAdd.setOnClickListener(View.OnClickListener {
 
+        /** 광고 클릭 시 **/
+        holder.imgAdd.setOnClickListener(View.OnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(mModel[listPosition].advertisements?.url.toString())
             (mActivity as Activity).startActivity(intent)
         })
-
 
 
     }
@@ -136,7 +169,7 @@ var postId:String=""
         notifyDataSetChanged()
     }
 
-    private fun applyForHelp(postId:String) {
+    private fun applyForHelp(postId: String) {
         if (isNetworkAvailable(mActivity)) {
 
             ApiRequest<Any>(
@@ -163,6 +196,7 @@ var postId:String=""
             )
         }
     }
+
     override fun getApiResponse(apiResponseManager: ApiResponseManager<*>) {
         when (apiResponseManager.type) {
 
@@ -175,7 +209,7 @@ var postId:String=""
 
                         val intent = Intent(mActivity, PostDetailActivity::class.java)
                         intent.putExtra("id", postId)
-                        intent.putExtra("detail",response.data)
+                        intent.putExtra("detail", response.data)
                         (mActivity as Activity).startActivity(intent)
                         (mActivity as Activity).overridePendingTransition(
                             R.anim.slide_in_right,

@@ -3,16 +3,17 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:minHeight="@dimen/_140sdp"
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_home"
         android:layout_width="match_parent"
+        android:paddingBottom="@dimen/margin_20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:cardElevation="@dimen/margin_6dp"
         app:cardCornerRadius="6dp"
-        app:cardUseCompatPadding="true"
         app:cardBackgroundColor="@color/white"
 
         android:layout_marginStart="15dp"
@@ -49,7 +50,7 @@
                     android:text="Help Online Shop (Buy)"
                     android:textColor="@color/text_color"
                     android:layout_marginEnd="10dp"
-                    android:textSize="@dimen/text_size_12sp"
+                    android:textSize="@dimen/text_size_14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -137,17 +138,17 @@
                     android:gravity="end"
                     android:layout_weight="1">
 
-                        <TextView
-                            android:id="@+id/tv_reamin_points"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/noto_medium"
-                            android:text="@string/remaining_points"
-                            android:textColor="@color/black"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginTop="13dp"
-                            android:layout_marginStart="20dp"
-                            android:textSize="@dimen/text_size_14sp" />
+                    <TextView
+                        android:id="@+id/tv_reamin_points"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/noto_medium"
+                        android:text="남은 자리"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_14sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -161,11 +162,12 @@
                             android:fontFamily="@font/noto_semi_bold"
                             android:text="08/"
                             android:textColor="@color/black"
-                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="10dp"
                             android:textSize="@dimen/text_size_18sp" />
 
                         <TextView
                             android:id="@+id/tv_total"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_regular"
@@ -200,7 +202,7 @@
         android:layout_marginStart="@dimen/margin_18dp"
         android:layout_marginEnd="@dimen/margin_18dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/img1"/>
+        android:src="@drawable/img_detail1"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_add"
         android:visibility="gone"
